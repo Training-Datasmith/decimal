@@ -18,8 +18,6 @@ class Comparison
     /**
      * Compares two decimal numbers.
      *
-     * @param DecimalNumber $a
-     * @param DecimalNumber $b
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
@@ -35,12 +33,10 @@ class Comparison
     /**
      * Compares two decimal numbers using BC Math
      *
-     * @param DecimalNumber $a
-     * @param DecimalNumber $b
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
-    public function compareUsingBcMath(DecimalNumber $a, DecimalNumber $b)
+    public function compareUsingBcMath(DecimalNumber $a, DecimalNumber $b): int
     {
         return bccomp((string) $a, (string) $b, max($a->getExponent(), $b->getExponent()));
     }
@@ -48,8 +44,6 @@ class Comparison
     /**
      * Compares two decimal numbers without using BC Math
      *
-     * @param DecimalNumber $a
-     * @param DecimalNumber $b
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
@@ -74,8 +68,6 @@ class Comparison
     /**
      * Compares two decimal numbers as positive regardless of sign.
      *
-     * @param DecimalNumber $a
-     * @param DecimalNumber $b
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
@@ -108,7 +100,7 @@ class Comparison
      *
      * @return int Returns 0 if both signs are equal, 1 if $a is positive, and -1 if $b is positive
      */
-    private function compareSigns($a, $b)
+    private function compareSigns($a, $b): int
     {
         if ($a === $b) {
             return 0;
@@ -130,7 +122,7 @@ class Comparison
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
-    private function compareNumeric($a, $b)
+    private function compareNumeric(int $a, int $b): int
     {
         if ($a < $b) {
             return -1;
@@ -151,7 +143,7 @@ class Comparison
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
-    private function compareBinary($a, $b)
+    private function compareBinary($a, $b): int
     {
         $comparison = strcmp($a, $b);
         if ($comparison > 0) {

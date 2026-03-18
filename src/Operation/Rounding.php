@@ -36,22 +36,16 @@ class Rounding
         switch ($roundingMode) {
             case self::ROUND_HALF_UP:
                 return $this->roundHalfUp($number, $precision);
-                break;
             case self::ROUND_CEIL:
                 return $this->ceil($number, $precision);
-                break;
             case self::ROUND_FLOOR:
                 return $this->floor($number, $precision);
-                break;
             case self::ROUND_HALF_DOWN:
                 return $this->roundHalfDown($number, $precision);
-                break;
             case self::ROUND_TRUNCATE:
                 return $this->truncate($number, $precision);
-                break;
             case self::ROUND_HALF_EVEN:
                 return $this->roundHalfEven($number, $precision);
-                break;
         }
 
         throw new \InvalidArgumentException(sprintf('Invalid rounding mode: %s', print_r($roundingMode, true)));
@@ -367,7 +361,7 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    private function roundHalf(DecimalNumber $number, $precision, $halfwayValue)
+    private function roundHalf(DecimalNumber $number, $precision, int $halfwayValue)
     {
         $precision = $this->sanitizePrecision($precision);
 
@@ -409,7 +403,7 @@ class Rounding
      *
      * @throws \InvalidArgumentException if precision is not a positive integer
      */
-    private function sanitizePrecision($precision)
+    private function sanitizePrecision($precision): int
     {
         if (!is_numeric($precision) || $precision < 0) {
             throw new \InvalidArgumentException(sprintf('Invalid precision: %s', print_r($precision, true)));

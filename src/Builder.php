@@ -27,10 +27,8 @@ class Builder
      * Builds a Number from a string
      *
      * @param string $number
-     *
-     * @return DecimalNumber
      */
-    public static function parseNumber($number)
+    public static function parseNumber($number): \PrestaShop\Decimal\DecimalNumber
     {
         if (!self::itLooksLikeANumber($number, $numberParts)) {
             throw new \InvalidArgumentException(sprintf('"%s" cannot be interpreted as a number', print_r($number, true)));
@@ -78,10 +76,8 @@ class Builder
     /**
      * @param string $number
      * @param array $numberParts
-     *
-     * @return bool
      */
-    private static function itLooksLikeANumber($number, &$numberParts)
+    private static function itLooksLikeANumber($number, &$numberParts): bool
     {
         return
             strlen((string) $number) > 0

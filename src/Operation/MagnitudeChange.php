@@ -28,9 +28,7 @@ class MagnitudeChange
      * $o->compute($n, -6); // 0.00012345678
      * ```
      *
-     * @param DecimalNumber $number
      * @param int $exponent
-     *
      * @return DecimalNumber
      */
     public function compute(DecimalNumber $number, $exponent)

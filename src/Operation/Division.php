@@ -55,13 +55,13 @@ class Division
      *
      * @throws DivisionByZeroException
      */
-    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b, $precision = self::DEFAULT_PRECISION)
+    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b, $precision = self::DEFAULT_PRECISION): \PrestaShop\Decimal\DecimalNumber
     {
         if ((string) $b === '0') {
             throw new DivisionByZeroException();
         }
 
-        return new DecimalNumber((string) bcdiv($a, $b, $precision));
+        return new DecimalNumber(bcdiv($a, $b, $precision));
     }
 
     /**
@@ -124,10 +124,8 @@ class Division
      * @param DecimalNumber $a Dividend
      * @param DecimalNumber $b Divisor
      * @param int $precision Maximum number of decimals to try
-     *
-     * @return DecimalNumber
      */
-    private function integerDivision(DecimalNumber $a, DecimalNumber $b, $precision)
+    private function integerDivision(DecimalNumber $a, DecimalNumber $b, $precision): \PrestaShop\Decimal\DecimalNumber
     {
         $dividend = $a->getCoefficient();
         $divisor = new DecimalNumber($b->getCoefficient());

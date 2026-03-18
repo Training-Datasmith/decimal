@@ -40,12 +40,12 @@ class Multiplication
      *
      * @return DecimalNumber Result of the multiplication
      */
-    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b)
+    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b): \PrestaShop\Decimal\DecimalNumber
     {
         $precision1 = $a->getPrecision();
         $precision2 = $b->getPrecision();
 
-        return new DecimalNumber((string) bcmul($a, $b, $precision1 + $precision2));
+        return new DecimalNumber(bcmul($a, $b, $precision1 + $precision2));
     }
 
     /**

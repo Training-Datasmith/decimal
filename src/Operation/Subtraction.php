@@ -16,22 +16,6 @@ use PrestaShop\Decimal\DecimalNumber;
 class Subtraction
 {
     /**
-     * Maximum safe string size in order to be confident
-     * that it won't overflow the max int size when operating with it
-     *
-     * @var int
-     */
-    private $maxSafeIntStringSize;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->maxSafeIntStringSize = strlen((string) PHP_INT_MAX) - 1;
-    }
-
-    /**
      * Performs the subtraction
      *
      * @param DecimalNumber $a Minuend
@@ -56,12 +40,12 @@ class Subtraction
      *
      * @return DecimalNumber Result of the subtraction
      */
-    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b)
+    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b): \PrestaShop\Decimal\DecimalNumber
     {
         $precision1 = $a->getPrecision();
         $precision2 = $b->getPrecision();
 
-        return new DecimalNumber((string) bcsub($a, $b, max($precision1, $precision2)));
+        return new DecimalNumber(bcsub($a, $b, max($precision1, $precision2)));
     }
 
     /**
@@ -82,18 +66,18 @@ class Subtraction
                 // eg. f(-1, -2) = |-2| - |-1| = 2 - 1 = 1
                 // e.g. f(-2, -1) =  |-1| - |-2| = 1 - 2 = -1
                 return $this->computeWithoutBcMath($b->toPositive(), $a->toPositive());
-            } else {
-                // if the minuend is negative and the subtrahend is positive,
-                // we can just add them as positive numbers and then invert the sign
-                // f(x, y) = -(|x| + y)
-                // eg. f(1, 2) = -(|-1| + 2) = -3
-                // eg. f(-2, 1) = -(|-2| + 1) = -3
-                return $a
-                    ->toPositive()
-                    ->plus($b)
-                    ->toNegative();
             }
-        } elseif ($b->isNegative()) {
+            // if the minuend is negative and the subtrahend is positive,
+            // we can just add them as positive numbers and then invert the sign
+            // f(x, y) = -(|x| + y)
+            // eg. f(1, 2) = -(|-1| + 2) = -3
+            // eg. f(-2, 1) = -(|-2| + 1) = -3
+            return $a
+                ->toPositive()
+                ->plus($b)
+                ->toNegative();
+        }
+        if ($b->isNegative()) {
             // if the minuend is positive subtrahend is negative, perform an addition
             // f(x, y) = x + |y|
             // eg. f(2, -1) = 2 + |-1| = 2 + 1 = 3
@@ -111,7 +95,7 @@ class Subtraction
         }
 
         // pad coefficients with leading/trailing zeroes
-        list($coeff1, $coeff2) = $this->normalizeCoefficients($a, $b);
+        [$coeff1, $coeff2] = $this->normalizeCoefficients($a, $b);
 
         // compute the coefficient subtraction
         if ($a->isGreaterThan($b)) {
@@ -131,12 +115,10 @@ class Subtraction
     /**
      * Normalizes coefficients by adding leading or trailing zeroes as needed so that both are the same length
      *
-     * @param DecimalNumber $a
-     * @param DecimalNumber $b
      *
      * @return array An array containing the normalized coefficients
      */
-    private function normalizeCoefficients(DecimalNumber $a, DecimalNumber $b)
+    private function normalizeCoefficients(DecimalNumber $a, DecimalNumber $b): array
     {
         $exp1 = $a->getExponent();
         $exp2 = $b->getExponent();
@@ -173,10 +155,8 @@ class Subtraction
      * @param bool $fractional [default=false]
      *                         If true, the numbers will be treated as the fractional part of a number (padded with trailing zeroes).
      *                         Otherwise, they will be treated as the integer part (padded with leading zeroes).
-     *
-     * @return string
      */
-    private function subtractStrings($number1, $number2, $fractional = false)
+    private function subtractStrings($number1, $number2, $fractional = false): string
     {
         // find out which of the strings is longest
         $maxLength = max(strlen($number1), strlen($number2));

@@ -56,12 +56,12 @@ class Addition
      *
      * @return DecimalNumber Result of the addition
      */
-    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b)
+    public function computeUsingBcMath(DecimalNumber $a, DecimalNumber $b): \PrestaShop\Decimal\DecimalNumber
     {
         $precision1 = $a->getPrecision();
         $precision2 = $b->getPrecision();
 
-        return new DecimalNumber((string) bcadd($a, $b, max($precision1, $precision2)));
+        return new DecimalNumber(bcadd($a, $b, max($precision1, $precision2)));
     }
 
     /**
@@ -119,7 +119,7 @@ class Addition
         }
 
         // pad coefficients with leading/trailing zeroes
-        list($coeff1, $coeff2) = $this->normalizeCoefficients($a, $b);
+        [$coeff1, $coeff2] = $this->normalizeCoefficients($a, $b);
 
         // compute the coefficient sum
         $sum = $this->addStrings($coeff1, $coeff2);
@@ -136,12 +136,10 @@ class Addition
     /**
      * Normalizes coefficients by adding leading or trailing zeroes as needed so that both are the same length
      *
-     * @param DecimalNumber $a
-     * @param DecimalNumber $b
      *
      * @return array An array containing the normalized coefficients
      */
-    private function normalizeCoefficients(DecimalNumber $a, DecimalNumber $b)
+    private function normalizeCoefficients(DecimalNumber $a, DecimalNumber $b): array
     {
         $exp1 = $a->getExponent();
         $exp2 = $b->getExponent();
@@ -177,10 +175,8 @@ class Addition
      * @param bool $fractional [default=false]
      *                         If true, the numbers will be treated as the fractional part of a number (padded with trailing zeroes).
      *                         Otherwise, they will be treated as the integer part (padded with leading zeroes).
-     *
-     * @return string
      */
-    private function addStrings($number1, $number2, $fractional = false)
+    private function addStrings($number1, $number2, $fractional = false): string
     {
         // optimization - numbers can be treated as integers as long as they don't overflow the max int size
         if ('0' !== $number1[0]
