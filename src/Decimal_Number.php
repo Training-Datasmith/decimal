@@ -80,9 +80,9 @@ class Decimal_Number
      * Returns the integer part of the number.
      * Note that this does NOT include the sign.
      *
-     * @return string
+     * @return string Digits to the left of the decimal point, never empty (at least '0')
      */
-    public function get_integer_part()
+    public function get_integer_part(): string
     {
         if ('0' === $this->coefficient) {
             return $this->coefficient;
@@ -112,11 +112,11 @@ class Decimal_Number
     /**
      * Returns the number of digits in the fractional part.
      *
-     * @see self::getExponent() This method is an alias of getExponent().
+     * @see self::get_exponent() This method is an alias of get_exponent().
      *
-     * @return int
+     * @return int Non-negative count of significant fractional digits
      */
-    public function get_precision()
+    public function get_precision(): int
     {
         return $this->get_exponent();
     }
@@ -135,23 +135,23 @@ class Decimal_Number
      *
      * This value can also be interpreted as the number of significant digits on the fractional part.
      *
-     * @return int
+     * @return int Non-negative exponent value representing decimal places
      */
-    public function get_exponent()
+    public function get_exponent(): int
     {
         return $this->exponent;
     }
     /**
-     * Returns the raw number as stored internally. This coefficient is always an integer.
+     * Returns the raw number as stored internally. This coefficient is always an integer string.
      *
      * It can be transformed to float by computing:
      * ```
-     * getCoefficient() * 10^(-getExponent())
+     * get_coefficient() * 10^(-get_exponent())
      * ```
      *
-     * @return string
+     * @return string Integer string without sign or decimal point
      */
-    public function get_coefficient()
+    public function get_coefficient(): string
     {
         return $this->coefficient;
     }
@@ -168,20 +168,21 @@ class Decimal_Number
         return $output;
     }
     /**
-     * Returns the number as a string, with exactly $precision decimals
+     * Returns the number as a string, with exactly $precision decimals.
+     *
+     * Trailing zeroes are added when $precision exceeds the current scale.
      *
      * Example:
      * ```
-     * $n = new Number('123.4560');
-     * (string) $n->round(1); // '123.4'
-     * (string) $n->round(2); // '123.45'
-     * (string) $n->round(3); // '123.456'
-     * (string) $n->round(4); // '123.4560' (trailing zeroes are added)
-     * (string) $n->round(5); // '123.45600' (trailing zeroes are added)
+     * $n = new Decimal_Number('123.4560');
+     * $n->to_precision(1); // '123.4'
+     * $n->to_precision(4); // '123.4560' (trailing zeroes added)
      * ```
      *
-     * @param int $precision Exact number of desired decimals
-     * @param string $roundingMode [default=Rounding::ROUND_TRUNCATE] Rounding algorithm
+     * @param int    $precision     Exact number of desired decimal places (>= 0)
+     * @param string $rounding_mode One of the Rounding::ROUND_* constants (default: truncate)
+     *
+     * @return string Formatted number string with exactly $precision decimal places
      */
     public function to_precision($precision, $rounding_mode = Rounding::ROUND_TRUNCATE): string
     {
@@ -223,11 +224,13 @@ class Decimal_Number
         return (string) $this;
     }
     /**
-     * Returns this number as a positive number
+     * Returns this number as a positive number.
      *
-     * @return self
+     * If already positive, returns $this unchanged (no allocation).
+     *
+     * @return self A non-negative copy of this number
      */
-    public function to_positive()
+    public function to_positive(): self
     {
         if (!$this->is_negative) {
             return $this;
@@ -235,11 +238,13 @@ class Decimal_Number
         return $this->invert();
     }
     /**
-     * Returns this number as a negative number
+     * Returns this number as a negative number.
      *
-     * @return self
+     * If already negative, returns $this unchanged (no allocation).
+     *
+     * @return self A negative copy of this number
      */
-    public function to_negative()
+    public function to_negative(): self
     {
         if ($this->is_negative) {
             return $this;
@@ -247,52 +252,51 @@ class Decimal_Number
         return $this->invert();
     }
     /**
-     * Returns the computed result of adding another number to this one
+     * Returns the computed result of adding another number to this one.
      *
-     * @param self $addend Number to add
+     * @param self $addend The number to add to this value
      *
-     * @return self
+     * @return self A new Decimal_Number representing the sum
      */
-    public function plus(self $addend)
+    public function plus(self $addend): self
     {
         return (new Operation\Addition())->compute($this, $addend);
     }
     /**
-     * Returns the computed result of subtracting another number to this one
+     * Returns the computed result of subtracting another number from this one.
      *
-     * @param self $subtrahend Number to subtract
+     * @param self $subtrahend The number to subtract from this value
      *
-     * @return self
+     * @return self A new Decimal_Number representing the difference
      */
-    public function minus(self $subtrahend)
+    public function minus(self $subtrahend): self
     {
         return (new Operation\Subtraction())->compute($this, $subtrahend);
     }
     /**
-     * Returns the computed result of multiplying this number with another one
+     * Returns the computed result of multiplying this number with another one.
      *
+     * @param self $factor The multiplier
      *
-     * @return self
+     * @return self A new Decimal_Number representing the product
      */
-    public function times(self $factor)
+    public function times(self $factor): self
     {
         return (new Operation\Multiplication())->compute($this, $factor);
     }
     /**
-     * Returns the computed result of dividing this number by another one, with up to $precision number of decimals.
+     * Returns the computed result of dividing this number by another one.
      *
-     * A target maximum precision is required in order to handle potential infinite number of decimals
-     * (e.g. 1/3 = 0.3333333...).
+     * A maximum precision is required because some divisions produce infinite decimal expansions
+     * (e.g. 1 ÷ 3 = 0.3333...). Excess digits are truncated without rounding.
      *
-     * If the division yields more decimal positions than the requested precision,
-     * the remaining decimals are truncated, with **no rounding**.
+     * @param self $divisor   The number to divide by
+     * @param int  $precision Maximum decimal places in the result (default: Division::DEFAULT_PRECISION)
      *
-     * @param int $precision [optional] By default, up to Operation\Division::DEFAULT_PRECISION number of decimals
-     *
-     * @return self
-     * @throws Exception\DivisionByZeroException
+     * @return self A new Decimal_Number representing the quotient
+     * @throws Exception\Division_By_Zero_Exception When $divisor equals zero
      */
-    public function divided_by(self $divisor, $precision = Operation\Division::DEFAULT_PRECISION)
+    public function divided_by(self $divisor, $precision = Operation\Division::DEFAULT_PRECISION): self
     {
         return (new Operation\Division())->compute($this, $divisor, $precision);
     }
@@ -320,11 +324,11 @@ class Decimal_Number
         return $this->is_positive() && !$this->equals_zero();
     }
     /**
-     * Indicates if this number is greater or equal than zero
+     * Indicates if this number is greater than or equal to zero.
      *
-     * @return bool
+     * @return bool True when the number is non-negative (includes zero)
      */
-    public function is_greater_or_equal_than_zero()
+    public function is_greater_or_equal_than_zero(): bool
     {
         return $this->is_positive();
     }
@@ -380,11 +384,11 @@ class Decimal_Number
         return !$this->is_negative;
     }
     /**
-     * Indicates if this number is negative
+     * Indicates if this number is negative.
      *
-     * @return bool
+     * @return bool True when the number is strictly less than zero
      */
-    public function is_negative()
+    public function is_negative(): bool
     {
         return $this->is_negative;
     }
@@ -409,13 +413,15 @@ class Decimal_Number
         return new static($sign . $this->get_coefficient(), $this->get_exponent());
     }
     /**
-     * Creates a new copy of this number multiplied by 10^$exponent
+     * Creates a new copy of this number multiplied by 10^$exponent (shifts the decimal point).
      *
-     * @param int $exponent
+     * Positive $exponent shifts left (larger); negative shifts right (smaller).
      *
-     * @return static
+     * @param int $exponent Power of 10 to multiply by
+     *
+     * @return static A new instance with the adjusted magnitude
      */
-    public function to_magnitude($exponent)
+    public function to_magnitude(int $exponent): static
     {
         return (new Operation\Magnitude_Change())->compute($this, $exponent);
     }
