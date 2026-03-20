@@ -18,21 +18,21 @@
         }
     ],
     "require": {
-        "php" : ">=7.2"
+        "php": ">=7.2"
     },
     "require-dev": {
-        "phpunit/phpunit" : "8.*",
+        "phpunit/phpunit": "8.*",
         "prestashop/php-dev-tools": "^4.1",
         "phpstan/phpstan": "^0.12.99"
     },
     "autoload": {
         "psr-4": {
-            "PrestaShop\\Decimal\\": "src"
+            "Presta_Shop\\Decimal\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PrestaShop\\Decimal\\Test\\": "tests"
+            "Presta_Shop\\Decimal\\Test\\": "tests"
         }
     }
 }
