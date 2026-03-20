@@ -1,21 +1,19 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * This file is part of the PrestaShop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+namespace Presta_Shop\Decimal\Operation;
 
-namespace PrestaShop\Decimal\Operation;
-
-use PrestaShop\Decimal\DecimalNumber;
-
+use Presta_Shop\Decimal\Decimal_Number;
 /**
  * Computes relative magnitude changes on a decimal number
  */
-class MagnitudeChange
+class Magnitude_Change
 {
     /**
      * Multiplies a number by 10^$exponent.
@@ -33,28 +31,18 @@ class MagnitudeChange
      * @param int $exponent
      * @return DecimalNumber
      */
-    public function compute(DecimalNumber $number, $exponent)
+    public function compute(Decimal_Number $number, $exponent)
     {
         $exponent = (int) $exponent;
-
         if ($exponent === 0) {
             return $number;
         }
-
-        $resultingExponent = $exponent - $number->getExponent();
-
-        if ($resultingExponent <= 0) {
-            return new DecimalNumber(
-                $number->getSign() . $number->getCoefficient(),
-                abs($resultingExponent)
-            );
+        $resulting_exponent = $exponent - $number->get_exponent();
+        if ($resulting_exponent <= 0) {
+            return new Decimal_Number($number->get_sign() . $number->get_coefficient(), abs($resulting_exponent));
         }
-
         // add zeroes
-        $targetLength = strlen($number->getCoefficient()) + $resultingExponent;
-
-        return new DecimalNumber(
-            $number->getSign() . str_pad($number->getCoefficient(), $targetLength, '0')
-        );
+        $target_length = strlen($number->get_coefficient()) + $resulting_exponent;
+        return new Decimal_Number($number->get_sign() . str_pad($number->get_coefficient(), $target_length, '0'));
     }
 }

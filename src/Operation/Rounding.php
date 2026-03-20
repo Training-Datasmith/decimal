@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * This file is part of the PrestaShop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+namespace Presta_Shop\Decimal\Operation;
 
-namespace PrestaShop\Decimal\Operation;
-
-use PrestaShop\Decimal\DecimalNumber;
-
+use Presta_Shop\Decimal\Decimal_Number;
 /**
  * Allows transforming a decimal number's precision
  */
@@ -23,7 +21,6 @@ class Rounding
     public const ROUND_HALF_UP = 'up';
     public const ROUND_HALF_DOWN = 'down';
     public const ROUND_HALF_EVEN = 'even';
-
     /**
      * Rounds a decimal number to a specified precision
      *
@@ -33,26 +30,24 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function compute(DecimalNumber $number, $precision, $roundingMode)
+    public function compute(Decimal_Number $number, $precision, $rounding_mode)
     {
-        switch ($roundingMode) {
+        switch ($rounding_mode) {
             case self::ROUND_HALF_UP:
-                return $this->roundHalfUp($number, $precision);
+                return $this->round_half_up($number, $precision);
             case self::ROUND_CEIL:
                 return $this->ceil($number, $precision);
             case self::ROUND_FLOOR:
                 return $this->floor($number, $precision);
             case self::ROUND_HALF_DOWN:
-                return $this->roundHalfDown($number, $precision);
+                return $this->round_half_down($number, $precision);
             case self::ROUND_TRUNCATE:
                 return $this->truncate($number, $precision);
             case self::ROUND_HALF_EVEN:
-                return $this->roundHalfEven($number, $precision);
+                return $this->round_half_even($number, $precision);
         }
-
-        throw new \InvalidArgumentException(sprintf('Invalid rounding mode: %s', print_r($roundingMode, true)));
+        throw new \InvalidArgumentException(sprintf('Invalid rounding mode: %s', print_r($rounding_mode, true)));
     }
-
     /**
      * Truncates a number to a target number of decimal digits.
      *
@@ -61,26 +56,17 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function truncate(DecimalNumber $number, $precision)
+    public function truncate(Decimal_Number $number, $precision)
     {
-        $precision = $this->sanitizePrecision($precision);
-
-        if ($number->getPrecision() <= $precision) {
+        $precision = $this->sanitize_precision($precision);
+        if ($number->get_precision() <= $precision) {
             return $number;
         }
-
         if (0 === $precision) {
-            return new DecimalNumber($number->getSign() . $number->getIntegerPart());
+            return new Decimal_Number($number->get_sign() . $number->get_integer_part());
         }
-
-        return new DecimalNumber(
-            $number->getSign()
-            . $number->getIntegerPart()
-            . '.'
-            . substr($number->getFractionalPart(), 0, $precision)
-        );
+        return new Decimal_Number($number->get_sign() . $number->get_integer_part() . '.' . substr($number->get_fractional_part(), 0, $precision));
     }
-
     /**
      * Rounds a number up if its precision is greater than the target one.
      *
@@ -105,19 +91,16 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function ceil(DecimalNumber $number, $precision)
+    public function ceil(Decimal_Number $number, $precision)
     {
-        $precision = $this->sanitizePrecision($precision);
-
-        if ($number->getPrecision() <= $precision) {
+        $precision = $this->sanitize_precision($precision);
+        if ($number->get_precision() <= $precision) {
             return $number;
         }
-
-        if ($number->isNegative()) {
+        if ($number->is_negative()) {
             // ceil works exactly as truncate for negative numbers
             return $this->truncate($number, $precision);
         }
-
         /*
          * The principle for ceil is the following:
          *
@@ -128,20 +111,15 @@ class Rounding
          * if D > 0, ceil(X, P) = truncate(X + 10^(-P), P)
          * if D = 0, ceil(X, P) = truncate(X, P)
          */
-
         if ($precision > 0) {
             // we know that D > 0, because we have already checked that the number's precision
             // is greater than the target precision
-            $numberToAdd = '0.' . str_pad('1', $precision, '0', STR_PAD_LEFT);
+            $number_to_add = '0.' . str_pad('1', $precision, '0', STR_PAD_LEFT);
         } else {
-            $numberToAdd = '1';
+            $number_to_add = '1';
         }
-
-        return $this
-            ->truncate($number, $precision)
-            ->plus(new DecimalNumber($numberToAdd));
+        return $this->truncate($number, $precision)->plus(new Decimal_Number($number_to_add));
     }
-
     /**
      * Rounds a number down if its precision is greater than the target one.
      *
@@ -166,19 +144,16 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function floor(DecimalNumber $number, $precision)
+    public function floor(Decimal_Number $number, $precision)
     {
-        $precision = $this->sanitizePrecision($precision);
-
-        if ($number->getPrecision() <= $precision) {
+        $precision = $this->sanitize_precision($precision);
+        if ($number->get_precision() <= $precision) {
             return $number;
         }
-
-        if ($number->isPositive()) {
+        if ($number->is_positive()) {
             // floor works exactly as truncate for positive numbers
             return $this->truncate($number, $precision);
         }
-
         /*
          * The principle for ceil is the following:
          *
@@ -189,20 +164,15 @@ class Rounding
          * if D < 0, ceil(X, P) = truncate(X - 10^(-P), P)
          * if D = 0, ceil(X, P) = truncate(X, P)
          */
-
         if ($precision > 0) {
             // we know that D > 0, because we have already checked that the number's precision
             // is greater than the target precision
-            $numberToSubtract = '0.' . str_pad('1', $precision, '0', STR_PAD_LEFT);
+            $number_to_subtract = '0.' . str_pad('1', $precision, '0', STR_PAD_LEFT);
         } else {
-            $numberToSubtract = '1';
+            $number_to_subtract = '1';
         }
-
-        return $this
-            ->truncate($number, $precision)
-            ->minus(new DecimalNumber($numberToSubtract));
+        return $this->truncate($number, $precision)->minus(new Decimal_Number($number_to_subtract));
     }
-
     /**
      * Rounds the number according to the digit D located at precision P.
      * - It rounds away from zero if D >= 5
@@ -227,11 +197,10 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function roundHalfUp(DecimalNumber $number, $precision)
+    public function round_half_up(Decimal_Number $number, $precision)
     {
-        return $this->roundHalf($number, $precision, 5);
+        return $this->round_half($number, $precision, 5);
     }
-
     /**
      * Rounds the number according to the digit D located at precision P.
      * - It rounds away from zero if D > 5
@@ -256,11 +225,10 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function roundHalfDown(DecimalNumber $number, $precision)
+    public function round_half_down(Decimal_Number $number, $precision)
     {
-        return $this->roundHalf($number, $precision, 6);
+        return $this->round_half($number, $precision, 6);
     }
-
     /**
      * Rounds a number according to "banker's rounding".
      *
@@ -303,14 +271,12 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    public function roundHalfEven(DecimalNumber $number, $precision)
+    public function round_half_even(Decimal_Number $number, $precision)
     {
-        $precision = $this->sanitizePrecision($precision);
-
-        if ($number->getPrecision() <= $precision) {
+        $precision = $this->sanitize_precision($precision);
+        if ($number->get_precision() <= $precision) {
             return $number;
         }
-
         /**
          * The principle for roundHalfEven is the following:
          *
@@ -324,33 +290,26 @@ class Rounding
          * if D = 5 and E is odd and X is positive, roundHalfUp(X, P) = ceil(X, P)
          * if D = 5 and E is odd and X is negative, roundHalfUp(X, P) = floor(X, P)
          */
-        $fractionalPart = $number->getFractionalPart();
-
-        $digit = (int) $fractionalPart[$precision];
-
+        $fractional_part = $number->get_fractional_part();
+        $digit = (int) $fractional_part[$precision];
         if ($digit !== 5) {
-            return $this->roundHalfUp($number, $precision);
+            return $this->round_half_up($number, $precision);
         }
-
         // retrieve the digit to the left of it
         if ($precision === 0) {
-            $referenceDigit = (int) substr($number->getIntegerPart(), -1);
+            $reference_digit = (int) substr($number->get_integer_part(), -1);
         } else {
-            $referenceDigit = (int) $fractionalPart[$precision - 1];
+            $reference_digit = (int) $fractional_part[$precision - 1];
         }
-
         // truncate if even
-        $isEven = $referenceDigit % 2 === 0;
-        if ($isEven) {
+        $is_even = $reference_digit % 2 === 0;
+        if ($is_even) {
             return $this->truncate($number, $precision);
         }
-
         // round away from zero
-        $method = ($number->isPositive()) ? self::ROUND_CEIL : self::ROUND_FLOOR;
-
+        $method = $number->is_positive() ? self::ROUND_CEIL : self::ROUND_FLOOR;
         return $this->compute($number, $precision, $method);
     }
-
     /**
      * Rounds the number according to the digit D located at precision P.
      * - It rounds away from zero if D >= $halfwayValue
@@ -363,14 +322,12 @@ class Rounding
      *
      * @return DecimalNumber
      */
-    private function roundHalf(DecimalNumber $number, $precision, int $halfwayValue)
+    private function round_half(Decimal_Number $number, $precision, int $halfway_value)
     {
-        $precision = $this->sanitizePrecision($precision);
-
-        if ($number->getPrecision() <= $precision) {
+        $precision = $this->sanitize_precision($precision);
+        if ($number->get_precision() <= $precision) {
             return $number;
         }
-
         /**
          * The principle for roundHalf is the following:
          *
@@ -382,20 +339,16 @@ class Rounding
          * if D >= Y, roundHalf(X, P) = ceil(X, P)
          * if D < Y, roundHalf(X, P) = truncate(X, P)
          */
-        $fractionalPart = $number->getFractionalPart();
-
-        $digit = (int) $fractionalPart[$precision];
-        if ($digit >= $halfwayValue) {
+        $fractional_part = $number->get_fractional_part();
+        $digit = (int) $fractional_part[$precision];
+        if ($digit >= $halfway_value) {
             // round away from zero
-            $mode = ($number->isPositive()) ? self::ROUND_CEIL : self::ROUND_FLOOR;
-
+            $mode = $number->is_positive() ? self::ROUND_CEIL : self::ROUND_FLOOR;
             return $this->compute($number, $precision, $mode);
         }
-
         // round towards zero
         return $this->truncate($number, $precision);
     }
-
     /**
      * Ensures that precision is a positive int
      *
@@ -405,12 +358,11 @@ class Rounding
      *
      * @throws \InvalidArgumentException if precision is not a positive integer
      */
-    private function sanitizePrecision($precision): int
+    private function sanitize_precision($precision): int
     {
         if (!is_numeric($precision) || $precision < 0) {
             throw new \InvalidArgumentException(sprintf('Invalid precision: %s', print_r($precision, true)));
         }
-
         return (int) $precision;
     }
 }
