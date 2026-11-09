@@ -1,15 +1,17 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace Presta_Shop\Decimal\Operation;
 
 use Presta_Shop\Decimal\Decimal_Number;
+
 /**
  * Compares two decimal numbers
  */
@@ -18,7 +20,6 @@ class Comparison
     /**
      * Compares two decimal numbers.
      *
-     *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
     public function compare(Decimal_Number $a, Decimal_Number $b)
@@ -26,11 +27,12 @@ class Comparison
         if (function_exists('bccomp')) {
             return $this->compare_using_bc_math($a, $b);
         }
+
         return $this->compare_without_bc_math($a, $b);
     }
+
     /**
      * Compares two decimal numbers using BC Math
-     *
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
@@ -38,9 +40,9 @@ class Comparison
     {
         return bccomp((string) $a, (string) $b, max($a->get_exponent(), $b->get_exponent()));
     }
+
     /**
      * Compares two decimal numbers without using BC Math
-     *
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
@@ -56,11 +58,12 @@ class Comparison
         if ($a->is_negative()) {
             return -$result;
         }
+
         return $result;
     }
+
     /**
      * Compares two decimal numbers as positive regardless of sign.
-     *
      *
      * @return int returns 1 if $a > $b, -1 if $a < $b, and 0 if they are equal
      */
@@ -79,6 +82,7 @@ class Comparison
         // integer parts are equal, compare fractional part
         return $this->compare_binary($a->get_fractional_part(), $b->get_fractional_part());
     }
+
     /**
      * Compares positive/negative signs.
      *
@@ -96,8 +100,10 @@ class Comparison
         if ($a === '') {
             return 1;
         }
+
         return -1;
     }
+
     /**
      * Compares two values numerically.
      *
@@ -114,8 +120,10 @@ class Comparison
         if ($a > $b) {
             return 1;
         }
+
         return 0;
     }
+
     /**
      * Compares two strings binarily.
      *
@@ -133,6 +141,7 @@ class Comparison
         if ($comparison < 0) {
             return -1;
         }
+
         return 0;
     }
 }

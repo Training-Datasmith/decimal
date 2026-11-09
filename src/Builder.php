@@ -1,12 +1,13 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace Presta_Shop\Decimal;
 
 /**
@@ -17,30 +18,31 @@ class Builder
     /**
      * Pattern for most numbers
      */
-    public const NUMBER_PATTERN = "/^(?<sign>[-+])?(?<integerPart>\\d+)?(?:\\.(?<fractionalPart>\\d+)(?<exponentPart>[eE](?<exponentSign>[-+])(?<exponent>\\d+))?)?\$/";
+    public const NUMBER_PATTERN = '/^(?<sign>[-+])?(?<integer_part>\\d+)?(?:\\.(?<fractional_part>\\d+)(?<exponent_part>[eE](?<exponent_sign>[-+])(?<exponent>\\d+))?)?$/';
     /**
      * Pattern for integer numbers in scientific notation (rare but supported by spec)
      */
-    public const INT_EXPONENTIAL_PATTERN = "/^(?<sign>[-+])?(?<integerPart>\\d+)(?<exponentPart>[eE](?<exponentSign>[-+])(?<exponent>\\d+))\$/";
+    public const INT_EXPONENTIAL_PATTERN = '/^(?<sign>[-+])?(?<integer_part>\\d+)(?<exponent_part>[eE](?<exponent_sign>[-+])(?<exponent>\\d+))$/';
+
     /**
      * Builds a Number from a string
      *
      * @param string $number
      */
-    public static function parse_number($number): \Presta_Shop\Decimal\Decimal_Number
+    public static function parse_number($number): Decimal_Number
     {
         if (!self::it_looks_like_a_number($number, $number_parts)) {
             throw new \InvalidArgumentException(sprintf('"%s" cannot be interpreted as a number', print_r($number, true)));
         }
         $integer_part = '';
-        if (array_key_exists('integerPart', $number_parts)) {
+        if (array_key_exists('integer_part', $number_parts)) {
             // extract the integer part and remove leading zeroes
-            $integer_part = ltrim($number_parts['integerPart'], '0');
+            $integer_part = ltrim($number_parts['integer_part'], '0');
         }
         $fractional_part = '';
-        if (array_key_exists('fractionalPart', $number_parts)) {
+        if (array_key_exists('fractional_part', $number_parts)) {
             // extract the fractional part and remove trailing zeroes
-            $fractional_part = rtrim($number_parts['fractionalPart'], '0');
+            $fractional_part = rtrim($number_parts['fractional_part'], '0');
         }
         $fractional_digits = strlen($fractional_part);
         $coefficient = $integer_part . $fractional_part;
@@ -49,8 +51,8 @@ class Builder
             $coefficient = '0';
         }
         // when the number has been provided in scientific notation
-        if (array_key_exists('exponentPart', $number_parts)) {
-            $given_exponent = (int) ($number_parts['exponentSign'] . $number_parts['exponent']);
+        if (array_key_exists('exponent_part', $number_parts)) {
+            $given_exponent = (int) ($number_parts['exponent_sign'] . $number_parts['exponent']);
             // we simply add or subtract fractional digits from the given exponent (depending if it's positive or negative)
             $fractional_digits -= $given_exponent;
             if ($fractional_digits < 0) {
@@ -61,8 +63,10 @@ class Builder
                 $fractional_digits = 0;
             }
         }
+
         return new Decimal_Number($number_parts['sign'] . $coefficient, $fractional_digits);
     }
+
     /**
      * @param string $number
      * @param array $numberParts

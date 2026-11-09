@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace PrestaShop\Decimal\Test\Operation;
+namespace Presta_Shop\Decimal\Test\Operation;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Operation\Addition;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Addition;
 
-class AdditionTest extends TestCase
+class Addition_Test extends TestCase
 {
     /**
      * Given two decimal numbers
@@ -23,24 +23,24 @@ class AdditionTest extends TestCase
      *
      * @param string $number1
      * @param string $number2
-     * @param string $expectedResult
+     * @param string $expected_result
      *
-     * @dataProvider provideNumbersToAdd
+     * @dataProvider provide_numbers_to_add
      */
-    public function testItAddsNumbers($number1, $number2, $expectedResult)
+    public function test_it_adds_numbers($number1, $number2, $expected_result)
     {
-        $n1 = new DecimalNumber($number1);
-        $n2 = new DecimalNumber($number2);
+        $n1 = new Decimal_Number($number1);
+        $n2 = new Decimal_Number($number2);
 
         $operation = new Addition();
-        $result1 = $operation->computeUsingBcMath($n1, $n2);
-        $result2 = $operation->computeWithoutBcMath($n1, $n2);
+        $result1 = $operation->compute_using_bc_math($n1, $n2);
+        $result2 = $operation->compute_without_bc_math($n1, $n2);
 
-        $this->assertSame($expectedResult, (string) $result1, "Failed asserting $number1 + $number2 = $expectedResult (BC Math)");
-        $this->assertSame($expectedResult, (string) $result2, "Failed asserting $number1 + $number2 = $expectedResult");
+        $this->assertSame($expected_result, (string) $result1, "Failed asserting $number1 + $number2 = $expected_result (BC Math)");
+        $this->assertSame($expected_result, (string) $result2, "Failed asserting $number1 + $number2 = $expected_result");
     }
 
-    public function provideNumbersToAdd()
+    public function provide_numbers_to_add()
     {
         return [
             ['0', '0', '0'],

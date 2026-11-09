@@ -1,22 +1,25 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace Presta_Shop\Decimal\Operation;
 
 use Presta_Shop\Decimal\Decimal_Number;
 use Presta_Shop\Decimal\Exception\Division_By_Zero_Exception;
+
 /**
  * Computes the division between two decimal numbers.
  */
 class Division
 {
     public const DEFAULT_PRECISION = 6;
+
     /**
      * Performs the division.
      *
@@ -26,49 +29,53 @@ class Division
      * If the division yields more decimal positions than the requested precision,
      * the remaining decimals are truncated, with **no rounding**.
      *
-     * @param DecimalNumber $a Dividend
-     * @param DecimalNumber $b Divisor
+     * @param Decimal_Number $a Dividend
+     * @param Decimal_Number $b Divisor
      * @param int $precision Maximum decimal precision
      *
-     * @return DecimalNumber Result of the division
+     * @return Decimal_Number Result of the division
      *
-     * @throws DivisionByZeroException
+     * @throws Division_By_Zero_Exception
      */
     public function compute(Decimal_Number $a, Decimal_Number $b, $precision = self::DEFAULT_PRECISION)
     {
         if (function_exists('bcdiv')) {
             return $this->compute_using_bc_math($a, $b, $precision);
         }
+
         return $this->compute_without_bc_math($a, $b, $precision);
     }
+
     /**
      * Performs the division using BC Math
      *
-     * @param DecimalNumber $a Dividend
-     * @param DecimalNumber $b Divisor
+     * @param Decimal_Number $a Dividend
+     * @param Decimal_Number $b Divisor
      * @param int $precision Maximum decimal precision
      *
-     * @return DecimalNumber Result of the division
+     * @return Decimal_Number Result of the division
      *
-     * @throws DivisionByZeroException
+     * @throws Division_By_Zero_Exception
      */
-    public function compute_using_bc_math(Decimal_Number $a, Decimal_Number $b, $precision = self::DEFAULT_PRECISION): \Presta_Shop\Decimal\Decimal_Number
+    public function compute_using_bc_math(Decimal_Number $a, Decimal_Number $b, $precision = self::DEFAULT_PRECISION): Decimal_Number
     {
         if ((string) $b === '0') {
             throw new Division_By_Zero_Exception();
         }
-        return new Decimal_Number(bcdiv($a, $b, $precision));
+
+        return new Decimal_Number((string) bcdiv((string) $a, (string) $b, $precision));
     }
+
     /**
      * Performs the division without BC Math
      *
-     * @param DecimalNumber $a Dividend
-     * @param DecimalNumber $b Divisor
+     * @param Decimal_Number $a Dividend
+     * @param Decimal_Number $b Divisor
      * @param int $precision Maximum decimal precision
      *
-     * @return DecimalNumber Result of the division
+     * @return Decimal_Number Result of the division
      *
-     * @throws DivisionByZeroException
+     * @throws Division_By_Zero_Exception
      */
     public function compute_without_bc_math(Decimal_Number $a, Decimal_Number $b, $precision = self::DEFAULT_PRECISION)
     {
@@ -101,16 +108,18 @@ class Division
             $a = $a->to_magnitude($max_precision);
             $b = $b->to_magnitude($max_precision);
         }
+
         return $this->integer_division($a, $b, $precision);
     }
+
     /**
-     * Computes the division between two integer DecimalNumbers
+     * Computes the division between two integer Decimal_Numbers
      *
-     * @param DecimalNumber $a Dividend
-     * @param DecimalNumber $b Divisor
+     * @param Decimal_Number $a Dividend
+     * @param Decimal_Number $b Divisor
      * @param int $precision Maximum number of decimals to try
      */
-    private function integer_division(Decimal_Number $a, Decimal_Number $b, $precision): \Presta_Shop\Decimal\Decimal_Number
+    private function integer_division(Decimal_Number $a, Decimal_Number $b, $precision): Decimal_Number
     {
         $dividend = $a->get_coefficient();
         $divisor = new Decimal_Number($b->get_coefficient());
@@ -147,6 +156,7 @@ class Division
             }
         }
         $sign = ($a->is_negative() xor $b->is_negative()) ? '-' : '';
+
         return new Decimal_Number($sign . $result, $exponent);
     }
 }

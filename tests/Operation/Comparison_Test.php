@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace PrestaShop\Decimal\Test\Operation;
+namespace Presta_Shop\Decimal\Test\Operation;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Operation\Comparison;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Comparison;
 
-class ComparisonTest extends TestCase
+class Comparison_Test extends TestCase
 {
     /**
-     * @var DecimalNumber
+     * @var Decimal_Number
      */
     private static $zero;
 
     public static function setUpBeforeClass(): void
     {
-        static::$zero = new DecimalNumber('0');
+        static::$zero = new Decimal_Number('0');
     }
 
     /**
@@ -38,20 +38,20 @@ class ComparisonTest extends TestCase
      * @param string $b
      * @param int $expected
      *
-     * @dataProvider provideCompareTestCases
+     * @dataProvider provide_compare_test_cases
      */
-    public function testItComparesNumbers($a, $b, $expected)
+    public function test_it_compares_numbers($a, $b, $expected)
     {
         $comparison = new Comparison();
 
-        $result1 = $comparison->compareUsingBcMath(new DecimalNumber($a), new DecimalNumber($b));
-        $result2 = $comparison->compareWithoutBcMath(new DecimalNumber($a), new DecimalNumber($b));
+        $result1 = $comparison->compare_using_bc_math(new Decimal_Number($a), new Decimal_Number($b));
+        $result2 = $comparison->compare_without_bc_math(new Decimal_Number($a), new Decimal_Number($b));
 
         $this->assertSame($expected, $result1, 'Failed assertion (BC Math)');
         $this->assertSame($expected, $result2, 'Failed assertion');
     }
 
-    public function provideCompareTestCases()
+    public function provide_compare_test_cases()
     {
         return [
             // a is greater
@@ -89,27 +89,27 @@ class ComparisonTest extends TestCase
      * @param string $number
      * @param bool $expected
      *
-     * @dataProvider provideEqualsZeroTests
+     * @dataProvider provide_equals_zero_tests
      */
-    public function testItDetectsEqualsZero($number, $expected)
+    public function test_it_detects_equals_zero($number, $expected)
     {
-        $n = new DecimalNumber($number);
+        $n = new Decimal_Number($number);
 
         $this->assertSame(
             $expected,
-            $n->equalsZero(),
-            sprintf('Failed to assert that %s %s equal to zero', $number, $this->getIsVerb($expected))
+            $n->equals_zero(),
+            sprintf('Failed to assert that %s %s equal to zero', $number, $this->get_is_verb($expected))
         );
 
         // double check
         $this->assertSame(
             $expected,
             $n->equals(static::$zero),
-            sprintf('Failed to assert that %s %s equal to Number zero', $number, $this->getIsVerb($expected))
+            sprintf('Failed to assert that %s %s equal to Number zero', $number, $this->get_is_verb($expected))
         );
     }
 
-    public function provideEqualsZeroTests()
+    public function provide_equals_zero_tests()
     {
         return [
             ['0', true],
@@ -136,27 +136,27 @@ class ComparisonTest extends TestCase
      * @param string $number
      * @param bool $expected
      *
-     * @dataProvider provideGreaterThanZeroTests
+     * @dataProvider provide_greater_than_zero_tests
      */
-    public function testItDetectsGreaterThanZero($number, $expected)
+    public function test_it_detects_greater_than_zero($number, $expected)
     {
-        $n = new DecimalNumber($number);
+        $n = new Decimal_Number($number);
 
         $this->assertSame(
             $expected,
-            $n->isGreaterThanZero(),
-            sprintf('Failed to assert that %s %s greater than zero', $number, $this->getIsVerb($expected))
+            $n->is_greater_than_zero(),
+            sprintf('Failed to assert that %s %s greater than zero', $number, $this->get_is_verb($expected))
         );
 
         // double check
         $this->assertSame(
             $expected,
-            $n->isGreaterThan(static::$zero),
-            sprintf('Failed to assert that %s %s grater to Number zero', $number, $this->getIsVerb($expected))
+            $n->is_greater_than(static::$zero),
+            sprintf('Failed to assert that %s %s grater to Number zero', $number, $this->get_is_verb($expected))
         );
     }
 
-    public function provideGreaterThanZeroTests()
+    public function provide_greater_than_zero_tests()
     {
         return [
             ['0', false],
@@ -183,27 +183,27 @@ class ComparisonTest extends TestCase
      * @param string $number
      * @param bool $expected
      *
-     * @dataProvider provideGreaterOrEqualThanZeroTests
+     * @dataProvider provide_greater_or_equal_than_zero_tests
      */
-    public function testItDetectsGreaterOrEqualThanZero($number, $expected)
+    public function test_it_detects_greater_or_equal_than_zero($number, $expected)
     {
-        $n = new DecimalNumber($number);
+        $n = new Decimal_Number($number);
 
         $this->assertSame(
             $expected,
-            $n->isGreaterOrEqualThanZero(),
-            sprintf('Failed to assert that %s %s greater or equal than zero', $number, $this->getIsVerb($expected))
+            $n->is_greater_or_equal_than_zero(),
+            sprintf('Failed to assert that %s %s greater or equal than zero', $number, $this->get_is_verb($expected))
         );
 
         // double check
         $this->assertSame(
             $expected,
-            $n->isGreaterOrEqualThan(static::$zero),
-            sprintf('Failed to assert that %s %s greater or equal to Number zero', $number, $this->getIsVerb($expected))
+            $n->is_greater_or_equal_than(static::$zero),
+            sprintf('Failed to assert that %s %s greater or equal to Number zero', $number, $this->get_is_verb($expected))
         );
     }
 
-    public function provideGreaterOrEqualThanZeroTests()
+    public function provide_greater_or_equal_than_zero_tests()
     {
         return [
             ['0', true],
@@ -230,27 +230,27 @@ class ComparisonTest extends TestCase
      * @param string $number
      * @param bool $expected
      *
-     * @dataProvider provideLowerThanZeroTests
+     * @dataProvider provide_lower_than_zero_tests
      */
-    public function testItDetectsLowerThanZero($number, $expected)
+    public function test_it_detects_lower_than_zero($number, $expected)
     {
-        $n = new DecimalNumber($number);
+        $n = new Decimal_Number($number);
 
         $this->assertSame(
             $expected,
-            $n->isLowerThanZero(),
-            sprintf('Failed to assert that %s %s lower than zero', $number, $this->getIsVerb($expected))
+            $n->is_lower_than_zero(),
+            sprintf('Failed to assert that %s %s lower than zero', $number, $this->get_is_verb($expected))
         );
 
         // double check
         $this->assertSame(
             $expected,
-            $n->isLowerThan(static::$zero),
-            sprintf('Failed to assert that %s %s lower to Number zero', $number, $this->getIsVerb($expected))
+            $n->is_lower_than(static::$zero),
+            sprintf('Failed to assert that %s %s lower to Number zero', $number, $this->get_is_verb($expected))
         );
     }
 
-    public function provideLowerThanZeroTests()
+    public function provide_lower_than_zero_tests()
     {
         return [
             ['0', false],
@@ -277,27 +277,27 @@ class ComparisonTest extends TestCase
      * @param string $number
      * @param bool $expected
      *
-     * @dataProvider provideLowerOrEqualThanZeroTests
+     * @dataProvider provide_lower_or_equal_than_zero_tests
      */
-    public function testItDetectsLowerOrEqualThanZero($number, $expected)
+    public function test_it_detects_lower_or_equal_than_zero($number, $expected)
     {
-        $n = new DecimalNumber($number);
+        $n = new Decimal_Number($number);
 
         $this->assertSame(
             $expected,
-            $n->isLowerOrEqualThanZero(),
-            sprintf('Failed to assert that %s %s lower or equal than zero', $number, $this->getIsVerb($expected))
+            $n->is_lower_or_equal_than_zero(),
+            sprintf('Failed to assert that %s %s lower or equal than zero', $number, $this->get_is_verb($expected))
         );
 
         // double check
         $this->assertSame(
             $expected,
-            $n->isLowerOrEqualThan(static::$zero),
-            sprintf('Failed to assert that %s %s lower or equal to Number zero', $number, $this->getIsVerb($expected))
+            $n->is_lower_or_equal_than(static::$zero),
+            sprintf('Failed to assert that %s %s lower or equal to Number zero', $number, $this->get_is_verb($expected))
         );
     }
 
-    public function provideLowerOrEqualThanZeroTests()
+    public function provide_lower_or_equal_than_zero_tests()
     {
         return [
             ['0', true],
@@ -322,7 +322,7 @@ class ComparisonTest extends TestCase
      *
      * @return string
      */
-    private function getIsVerb($assertion)
+    private function get_is_verb($assertion)
     {
         return ($assertion) ? 'is' : 'is NOT';
     }

@@ -2,115 +2,115 @@
 
 declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace PrestaShop\Decimal\Test;
+namespace Presta_Shop\Decimal\Test;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Operation\Rounding;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Rounding;
 
-class DecimalNumberTest extends TestCase
+class Decimal_NumberTest extends TestCase
 {
     /**
      * Given a valid number in a string
-     * When constructing a DecimalNumber with it
+     * When constructing a Decimal_Number with it
      * Then it should interpret the sign, decimal and fractional parts correctly
      *
      * @param string $number
-     * @param string $expectedSign
-     * @param string $expectedInteger
-     * @param string $expectedFraction
-     * @param string $expectedStr
+     * @param string $expected_sign
+     * @param string $expected_integer
+     * @param string $expected_fraction
+     * @param string $expected_str
      *
-     * @dataProvider provideValidNumbers
+     * @dataProvider provide_valid_numbers
      */
-    public function testItInterpretsNumbers($number, $expectedSign, $expectedInteger, $expectedFraction, $expectedStr)
+    public function test_it_interprets_numbers($number, $expected_sign, $expected_integer, $expected_fraction, $expected_str)
     {
-        $decimalNumber = new DecimalNumber($number);
-        $this->assertSame($expectedSign, $decimalNumber->getSign(), 'The sign is not as expected');
-        $this->assertSame($expectedInteger, $decimalNumber->getIntegerPart(), 'The integer part is not as expected');
+        $decimal_number = new Decimal_Number($number);
+        $this->assertSame($expected_sign, $decimal_number->get_sign(), 'The sign is not as expected');
+        $this->assertSame($expected_integer, $decimal_number->get_integer_part(), 'The integer part is not as expected');
         $this->assertSame(
-            $expectedFraction,
-            $decimalNumber->getFractionalPart(),
+            $expected_fraction,
+            $decimal_number->get_fractional_part(),
             'The fraction part is not as expected'
         );
-        $this->assertSame($expectedStr, (string) $decimalNumber, 'The string representation is not as expected');
+        $this->assertSame($expected_str, (string) $decimal_number, 'The string representation is not as expected');
     }
 
     /**
      * Given a valid coefficient and exponent
-     * When constructing a DecimalNumber with them
+     * When constructing a Decimal_Number with them
      * Then it should convert them to the expected string
      *
      * @param string $coefficient
      * @param int $exponent
-     * @param string $expectedStr
+     * @param string $expected_str
      *
-     * @dataProvider provideValidExponents
+     * @dataProvider provide_valid_exponents
      */
-    public function testItInterpretsExponents($coefficient, $exponent, $expectedStr)
+    public function test_it_interprets_exponents($coefficient, $exponent, $expected_str)
     {
-        $decimalNumber = new DecimalNumber($coefficient, $exponent);
-        $this->assertSame($expectedStr, (string) $decimalNumber);
+        $decimal_number = new Decimal_Number($coefficient, $exponent);
+        $this->assertSame($expected_str, (string) $decimal_number);
     }
 
     /**
      * Given an invalid number
-     * When constructing a DecimalNumber with it
+     * When constructing a Decimal_Number with it
      * Then an InvalidArgumentException should be thrown
      *
      * @param mixed $number
      *
-     * @dataProvider provideInvalidNumbers
+     * @dataProvider provide_invalid_numbers
      */
-    public function testItThrowsExceptionWhenGivenInvalidNumber($number)
+    public function test_it_throws_exception_when_given_invalid_number($number)
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new DecimalNumber($number);
+        new Decimal_Number($number);
     }
 
     /**
      * Given an invalid coefficient or exponent
-     * When constructing a DecimalNumber with them
+     * When constructing a Decimal_Number with them
      * Then an InvalidArgumentException should be thrown
      *
      * @param mixed $coefficient
      * @param mixed $exponent
      *
-     * @dataProvider provideInvalidCoefficients
+     * @dataProvider provide_invalid_coefficients
      */
-    public function testItThrowsExceptionWhenGivenInvalidCoefficientOrExponent($coefficient, $exponent)
+    public function test_it_throws_exception_when_given_invalid_coefficient_or_exponent($coefficient, $exponent)
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new DecimalNumber($coefficient, $exponent);
+        new Decimal_Number($coefficient, $exponent);
     }
 
     /**
-     * Given a DecimalNumber constructed with a valid number
+     * Given a Decimal_Number constructed with a valid number
      * When casting the number to string
      * The resulting string should not include leading nor trailing zeroes
      *
      * @param string $number
      * @param string $expected
      *
-     * @dataProvider provideNumbersWithNonSignificantCharacters
+     * @dataProvider provide_numbers_with_non_significant_characters
      */
-    public function testItDropsNonSignificantDigits($number, $expected)
+    public function test_it_drops_non_significant_digits($number, $expected)
     {
-        $decimalNumber = new DecimalNumber($number);
-        $this->assertSame($expected, (string) $decimalNumber);
+        $decimal_number = new Decimal_Number($number);
+        $this->assertSame($expected, (string) $decimal_number);
     }
 
     /**
-     * Given a DecimalNumber constructed with a valid number
+     * Given a Decimal_Number constructed with a valid number
      * When rounding it to a specific precision, using a specific rounding mode
      * The returned string should match the expectation
      *
@@ -119,16 +119,16 @@ class DecimalNumberTest extends TestCase
      * @param string $mode Rounding mode
      * @param string $expected Expected result
      *
-     * @dataProvider providePrecisionTestCases
+     * @dataProvider provide_precision_test_cases
      */
-    public function testPrecision($number, $precision, $mode, $expected)
+    public function test_precision($number, $precision, $mode, $expected)
     {
-        $decimalNumber = new DecimalNumber($number);
-        $this->assertSame($expected, (string) $decimalNumber->toPrecision($precision, $mode));
+        $decimal_number = new Decimal_Number($number);
+        $this->assertSame($expected, (string) $decimal_number->to_precision($precision, $mode));
     }
 
     /**
-     * Given a DecimalNumber constructed with a valid number
+     * Given a Decimal_Number constructed with a valid number
      * When rounding it to a specific precision, using a specific rounding mode
      * The returned string should match the expectation
      *
@@ -137,20 +137,20 @@ class DecimalNumberTest extends TestCase
      * @param string $mode Rounding mode
      * @param string $expected Expected result
      *
-     * @dataProvider provideRoundingTestCases
+     * @dataProvider provide_rounding_test_cases
      */
-    public function testRounding($number, $precision, $mode, $expected)
+    public function test_rounding($number, $precision, $mode, $expected)
     {
-        $decimalNumber = new DecimalNumber($number);
+        $decimal_number = new Decimal_Number($number);
         $this->assertSame(
             $expected,
-            (string) $decimalNumber->round($precision, $mode),
+            (string) $decimal_number->round($precision, $mode),
             "Failed to assert that round $number to $precision decimals = $expected"
         );
     }
 
     /**
-     * Given a DecimalNumber constructed with a valid number
+     * Given a Decimal_Number constructed with a valid number
      * When rounding it to a greater precision than its current one
      * The returned string should have been padded with the proper number of trailing zeroes
      *
@@ -158,30 +158,30 @@ class DecimalNumberTest extends TestCase
      * @param int $precision Target precision
      * @param string $expected Expected result
      *
-     * @dataProvider provideExtendedPrecisionTestCases
+     * @dataProvider provide_extended_precision_test_cases
      */
-    public function testItExtendsPrecisionAsNeeded($number, $precision, $expected)
+    public function test_it_extends_precision_as_needed($number, $precision, $expected)
     {
-        $decimalNumber = new DecimalNumber($number);
+        $decimal_number = new Decimal_Number($number);
         $this->assertSame(
             $expected,
-            (string) $decimalNumber->toPrecision($precision),
+            (string) $decimal_number->to_precision($precision),
             "Failed to assert that fixing $number to $precision decimals = $expected"
         );
     }
 
     /**
-     * Given two instances of DecimalNumber
+     * Given two instances of Decimal_Number
      * When comparing the first one with the second one
      * Then the result should be true if the instances are equal, and false otherwise
      *
-     * @param DecimalNumber $number1
-     * @param DecimalNumber $number2
+     * @param Decimal_Number $number1
+     * @param Decimal_Number $number2
      * @param string $expected
      *
-     * @dataProvider provideEqualityTestCases
+     * @dataProvider provide_equality_test_cases
      */
-    public function testItIsAbleToTellIfEqual($number1, $number2, $expected)
+    public function test_it_is_able_to_tell_if_equal($number1, $number2, $expected)
     {
         $this->assertSame(
             $expected,
@@ -199,15 +199,15 @@ class DecimalNumberTest extends TestCase
      * @param string $number2
      * @param int $expected
      *
-     * @dataProvider provideComparisonTestCases
+     * @dataProvider provide_comparison_test_cases
      */
-    public function testIsAbleToTellIfGreaterThan($number1, $number2, $expected)
+    public function test_is_able_to_tell_if_greater_than($number1, $number2, $expected)
     {
         $shouldBeGreater = (1 === $expected);
-        $number1 = new DecimalNumber($number1);
-        $number2 = new DecimalNumber($number2);
+        $number1 = new Decimal_Number($number1);
+        $number2 = new Decimal_Number($number2);
 
-        $this->assertSame($number1->isGreaterThan($number2), $shouldBeGreater);
+        $this->assertSame($number1->is_greater_than($number2), $shouldBeGreater);
     }
 
     /**
@@ -219,15 +219,15 @@ class DecimalNumberTest extends TestCase
      * @param string $number2
      * @param int $expected
      *
-     * @dataProvider provideComparisonTestCases
+     * @dataProvider provide_comparison_test_cases
      */
-    public function testIsAbleToTellIfLowerThan($number1, $number2, $expected)
+    public function test_is_able_to_tell_if_lower_than($number1, $number2, $expected)
     {
         $shouldBeLower = (-1 === $expected);
-        $number1 = new DecimalNumber($number1);
-        $number2 = new DecimalNumber($number2);
+        $number1 = new Decimal_Number($number1);
+        $number2 = new Decimal_Number($number2);
 
-        $this->assertSame($number1->isLowerThan($number2), $shouldBeLower);
+        $this->assertSame($number1->is_lower_than($number2), $shouldBeLower);
     }
 
     /**
@@ -238,12 +238,12 @@ class DecimalNumberTest extends TestCase
      * @param string $number
      * @param string $expected
      *
-     * @dataProvider provideToNegativeTransformationCases
+     * @dataProvider provide_to_negative_transformation_cases
      */
-    public function testItTransformsPositiveToNegative($number, $expected)
+    public function test_it_transforms_positive_to_negative($number, $expected)
     {
-        $number = (new DecimalNumber($number))
-            ->toNegative();
+        $number = (new Decimal_Number($number))
+            ->to_negative();
 
         $this->assertSame((string) $number, $expected);
     }
@@ -256,17 +256,17 @@ class DecimalNumberTest extends TestCase
      * @param string $number
      * @param string $expected
      *
-     * @dataProvider provideToPositiveTransformationCases
+     * @dataProvider provide_to_positive_transformation_cases
      */
-    public function testItTransformsNegativeToPositive($number, $expected)
+    public function test_it_transforms_negative_to_positive($number, $expected)
     {
-        $number = (new DecimalNumber($number))
-            ->toPositive();
+        $number = (new Decimal_Number($number))
+            ->to_positive();
 
         $this->assertSame((string) $number, $expected);
     }
 
-    public function provideValidNumbers()
+    public function provide_valid_numbers()
     {
         return [
             [
@@ -327,7 +327,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideValidExponents()
+    public function provide_valid_exponents()
     {
         return [
             'exponent 0' => ['123456', 0, '123456'],
@@ -361,7 +361,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideInvalidNumbers()
+    public function provide_invalid_numbers()
     {
         return [
             'bool false' => [false],
@@ -376,7 +376,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideInvalidCoefficients()
+    public function provide_invalid_coefficients()
     {
         return [
             'bool false' => [false, 0],
@@ -391,7 +391,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideNumbersWithNonSignificantCharacters()
+    public function provide_numbers_with_non_significant_characters()
     {
         return [
             ['01', '1'],
@@ -412,7 +412,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideExtendedPrecisionTestCases()
+    public function provide_extended_precision_test_cases()
     {
         return [
             ['1.23456789', 8, '1.23456789'],
@@ -421,7 +421,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideRoundingTestCases()
+    public function provide_rounding_test_cases()
     {
         return [
             'truncate 0' => ['1.23456789', 0, Rounding::ROUND_TRUNCATE, '1'],
@@ -465,7 +465,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function providePrecisionTestCases()
+    public function provide_precision_test_cases()
     {
         return [
             'truncate 0' => ['1.23456789', 0, Rounding::ROUND_TRUNCATE, '1'],
@@ -511,53 +511,53 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideEqualityTestCases()
+    public function provide_equality_test_cases()
     {
         return [
             [
-                new DecimalNumber('0'),
-                new DecimalNumber('0', 5),
+                new Decimal_Number('0'),
+                new Decimal_Number('0', 5),
                 true,
             ],
             [
-                new DecimalNumber('0.1234'),
-                new DecimalNumber('1234', 4),
+                new Decimal_Number('0.1234'),
+                new Decimal_Number('1234', 4),
                 true,
             ],
             [
-                new DecimalNumber('1234.01'),
-                new DecimalNumber('123401', 2),
+                new Decimal_Number('1234.01'),
+                new Decimal_Number('123401', 2),
                 true,
             ],
             [
-                new DecimalNumber('-0'),
-                new DecimalNumber('0'),
+                new Decimal_Number('-0'),
+                new Decimal_Number('0'),
                 true,
             ],
             [
-                new DecimalNumber('-1234.01'),
-                new DecimalNumber('-123401', 2),
+                new Decimal_Number('-1234.01'),
+                new Decimal_Number('-123401', 2),
                 true,
             ],
             [
-                new DecimalNumber('-1234.01'),
-                new DecimalNumber('123401', 2),
+                new Decimal_Number('-1234.01'),
+                new Decimal_Number('123401', 2),
                 false,
             ],
             [
-                new DecimalNumber('1234.01'),
-                new DecimalNumber('-123401', 2),
+                new Decimal_Number('1234.01'),
+                new Decimal_Number('-123401', 2),
                 false,
             ],
             [
-                new DecimalNumber('1234.01'),
-                new DecimalNumber('-1234.01'),
+                new Decimal_Number('1234.01'),
+                new Decimal_Number('-1234.01'),
                 false,
             ],
         ];
     }
 
-    public function provideComparisonTestCases()
+    public function provide_comparison_test_cases()
     {
         return [
             // a is greater
@@ -588,7 +588,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideToNegativeTransformationCases()
+    public function provide_to_negative_transformation_cases()
     {
         return [
             ['1.2345', '-1.2345'],
@@ -598,7 +598,7 @@ class DecimalNumberTest extends TestCase
         ];
     }
 
-    public function provideToPositiveTransformationCases()
+    public function provide_to_positive_transformation_cases()
     {
         return [
             ['-1.2345', '1.2345'],

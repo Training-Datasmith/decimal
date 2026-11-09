@@ -9,15 +9,15 @@ declare(strict_types=1);
  * that cause issues in financial calculations.
  */
 
-use PrestaShop\Decimal\Decimal_Number;
-use PrestaShop\Decimal\Operation\Rounding;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Rounding;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // --- 1. Construction ---
-$price   = new Decimal_Number('19.99');
-$tax     = new Decimal_Number('0.20');    // 20% VAT
-$qty     = new Decimal_Number('3');
+$price = new Decimal_Number('19.99');
+$tax = new Decimal_Number('0.20');    // 20% VAT
+$qty = new Decimal_Number('3');
 
 // --- 2. Arithmetic (all operations return new instances) ---
 $subtotal = $price->times($qty);
@@ -30,12 +30,12 @@ $total = $subtotal->plus($tax_amount);
 echo "Total:      {$total}" . PHP_EOL;              // 71.964
 
 // --- 3. Rounding ---
-echo "Rounded:    " . $total->to_precision(2, Rounding::ROUND_HALF_UP) . PHP_EOL; // 71.96
+echo 'Rounded:    ' . $total->to_precision(2, Rounding::ROUND_HALF_UP) . PHP_EOL; // 71.96
 
 // --- 4. Comparison ---
 $minimum_order = new Decimal_Number('50.00');
 if ($total->is_greater_than($minimum_order)) {
-    echo "Order qualifies for free shipping." . PHP_EOL;
+    echo 'Order qualifies for free shipping.' . PHP_EOL;
 }
 
 // --- 5. No floating-point errors ---

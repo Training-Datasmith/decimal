@@ -1,15 +1,17 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace Presta_Shop\Decimal\Operation;
 
 use Presta_Shop\Decimal\Decimal_Number;
+
 /**
  * Computes the addition of two decimal numbers
  */
@@ -22,6 +24,7 @@ class Addition
      * @var int
      */
     private $max_safe_int_string_size;
+
     /**
      * Constructor
      */
@@ -29,42 +32,47 @@ class Addition
     {
         $this->max_safe_int_string_size = strlen((string) PHP_INT_MAX) - 1;
     }
+
     /**
      * Performs the addition
      *
-     * @param DecimalNumber $a Base number
-     * @param DecimalNumber $b Addend
+     * @param Decimal_Number $a Base number
+     * @param Decimal_Number $b Addend
      *
-     * @return DecimalNumber Result of the addition
+     * @return Decimal_Number Result of the addition
      */
     public function compute(Decimal_Number $a, Decimal_Number $b)
     {
         if (function_exists('bcadd')) {
             return $this->compute_using_bc_math($a, $b);
         }
+
         return $this->compute_without_bc_math($a, $b);
     }
+
     /**
      * Performs the addition using BC Math
      *
-     * @param DecimalNumber $a Base number
-     * @param DecimalNumber $b Addend
+     * @param Decimal_Number $a Base number
+     * @param Decimal_Number $b Addend
      *
-     * @return DecimalNumber Result of the addition
+     * @return Decimal_Number Result of the addition
      */
-    public function compute_using_bc_math(Decimal_Number $a, Decimal_Number $b): \Presta_Shop\Decimal\Decimal_Number
+    public function compute_using_bc_math(Decimal_Number $a, Decimal_Number $b): Decimal_Number
     {
         $precision1 = $a->get_precision();
         $precision2 = $b->get_precision();
-        return new Decimal_Number(bcadd($a, $b, max($precision1, $precision2)));
+
+        return new Decimal_Number((string) bcadd((string) $a, (string) $b, max($precision1, $precision2)));
     }
+
     /**
      * Performs the addition without BC Math
      *
-     * @param DecimalNumber $a Base number
-     * @param DecimalNumber $b Addend
+     * @param Decimal_Number $a Base number
+     * @param Decimal_Number $b Addend
      *
-     * @return DecimalNumber Result of the addition
+     * @return Decimal_Number Result of the addition
      */
     public function compute_without_bc_math(Decimal_Number $a, Decimal_Number $b)
     {
@@ -110,11 +118,12 @@ class Addition
         $sign = $a->get_sign();
         // keep the bigger exponent
         $exponent = max($a->get_exponent(), $b->get_exponent());
+
         return new Decimal_Number($sign . $sum, $exponent);
     }
+
     /**
      * Normalizes coefficients by adding leading or trailing zeroes as needed so that both are the same length
-     *
      *
      * @return array An array containing the normalized coefficients
      */
@@ -138,8 +147,10 @@ class Addition
         } elseif ($len1 < $len2) {
             $coeff1 = str_pad($coeff1, $len2, '0', STR_PAD_LEFT);
         }
+
         return [$coeff1, $coeff2];
     }
+
     /**
      * Adds two integer numbers as strings.
      *
@@ -170,6 +181,7 @@ class Addition
         if ($carry_over > 0) {
             $result .= '1';
         }
+
         return strrev($result);
     }
 }

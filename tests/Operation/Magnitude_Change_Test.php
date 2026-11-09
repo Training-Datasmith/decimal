@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace PrestaShop\Decimal\Test\Operation;
+namespace Presta_Shop\Decimal\Test\Operation;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Operation\MagnitudeChange;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Magnitude_Change;
 
-class MagnitudeChangeTest extends TestCase
+class Magnitude_ChangeTest extends TestCase
 {
     /**
      * Given a decimal number
@@ -26,18 +26,18 @@ class MagnitudeChangeTest extends TestCase
      * @param int $exponent
      * @param string $expected
      *
-     * @dataProvider provideTestCases
+     * @dataProvider provide_test_cases
      */
-    public function testItChangesMagnitude($number, $exponent, $expected)
+    public function test_it_changes_magnitude($number, $exponent, $expected)
     {
-        $n = new DecimalNumber($number);
+        $n = new Decimal_Number($number);
 
-        $result = (new MagnitudeChange())->compute($n, $exponent);
+        $result = (new Magnitude_Change())->compute($n, $exponent);
 
         $this->assertSame($expected, (string) $result);
     }
 
-    public function provideTestCases()
+    public function provide_test_cases()
     {
         return [
             ['123.45678', 0, '123.45678'],

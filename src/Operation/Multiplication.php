@@ -1,15 +1,17 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace Presta_Shop\Decimal\Operation;
 
 use Presta_Shop\Decimal\Decimal_Number;
+
 /**
  * Computes the multiplication between two decimal numbers
  */
@@ -18,39 +20,43 @@ class Multiplication
     /**
      * Performs the multiplication
      *
-     * @param DecimalNumber $a Left operand
-     * @param DecimalNumber $b Right operand
+     * @param Decimal_Number $a Left operand
+     * @param Decimal_Number $b Right operand
      *
-     * @return DecimalNumber Result of the multiplication
+     * @return Decimal_Number Result of the multiplication
      */
     public function compute(Decimal_Number $a, Decimal_Number $b)
     {
         if (function_exists('bcmul')) {
             return $this->compute_using_bc_math($a, $b);
         }
+
         return $this->compute_without_bc_math($a, $b);
     }
+
     /**
      * Performs the multiplication using BC Math
      *
-     * @param DecimalNumber $a Left operand
-     * @param DecimalNumber $b Right operand
+     * @param Decimal_Number $a Left operand
+     * @param Decimal_Number $b Right operand
      *
-     * @return DecimalNumber Result of the multiplication
+     * @return Decimal_Number Result of the multiplication
      */
-    public function compute_using_bc_math(Decimal_Number $a, Decimal_Number $b): \Presta_Shop\Decimal\Decimal_Number
+    public function compute_using_bc_math(Decimal_Number $a, Decimal_Number $b): Decimal_Number
     {
         $precision1 = $a->get_precision();
         $precision2 = $b->get_precision();
-        return new Decimal_Number(bcmul($a, $b, $precision1 + $precision2));
+
+        return new Decimal_Number((string) bcmul((string) $a, (string) $b, $precision1 + $precision2));
     }
+
     /**
      * Performs the multiplication without BC Math
      *
-     * @param DecimalNumber $a Left operand
-     * @param DecimalNumber $b Right operand
+     * @param Decimal_Number $a Left operand
+     * @param Decimal_Number $b Right operand
      *
-     * @return DecimalNumber Result of the multiplication
+     * @return Decimal_Number Result of the multiplication
      */
     public function compute_without_bc_math(Decimal_Number $a, Decimal_Number $b)
     {
@@ -72,8 +78,10 @@ class Multiplication
         // a multiplication has at most as many decimal figures as the sum
         // of the number of decimal figures the factors have
         $exponent = $a->get_exponent() + $b->get_exponent();
+
         return new Decimal_Number($sign . $result, $exponent);
     }
+
     /**
      * Multiplies two integer numbers as strings.
      *
@@ -124,6 +132,7 @@ class Multiplication
             $result = $result->plus(new Decimal_Number(strrev($partial_result)));
             ++$step_number;
         }
+
         return (string) $result;
     }
 }

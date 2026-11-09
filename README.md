@@ -12,12 +12,12 @@ You can find out more about floating point precision [here](http://php.net/float
 
 Example:
 ```php
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Operation\Rounding;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Rounding;
 
-echo (new DecimalNumber('0.1'))
-    ->plus(new DecimalNumber('0.7'))
-    ->times(new DecimalNumber('10'))
+echo (new Decimal_Number('0.1'))
+    ->plus(new Decimal_Number('0.7'))
+    ->times(new Decimal_Number('10'))
     ->round(0, Rounding::ROUND_FLOOR)
   
 // echoes '8'
@@ -48,29 +48,29 @@ Quick links:
 ### Instantiation
 Creates a new Decimal number.
 ```php
-public __construct ( string $number [, int $exponent = null ] ): DecimalNumber
+public __construct ( string $number [, int $exponent = null ] ): Decimal_Number
 ```
-There are two ways to instantiate a Decimal\DecimalNumber:
+There are two ways to instantiate a Decimal\Decimal_Number:
 ``` php
 // create a number from string
-$number = new PrestaShop\Decimal\DecimalNumber('123.456');
+$number = new Presta_Shop\Decimal\Decimal_Number('123.456');
 echo $number; // echoes '123.456'
 ```
 ``` php
 // exponent notation
-$number = new PrestaShop\Decimal\DecimalNumber('123456', -3);
+$number = new Presta_Shop\Decimal\Decimal_Number('123456', -3);
 echo $number; // echoes '123.456'
 ```
 
 ### Addition
 Returns the computed result of adding another number to the current one.
 ```php
-public DecimalNumber::plus ( DecimalNumber $addend ): DecimalNumber
+public Decimal_Number::plus ( Decimal_Number $addend ): Decimal_Number
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('123.456');
-$b = new PrestaShop\Decimal\DecimalNumber('654.321');
+$a = new Presta_Shop\Decimal\Decimal_Number('123.456');
+$b = new Presta_Shop\Decimal\Decimal_Number('654.321');
 
 echo $a->plus($b); // echoes '777.777'
 ```
@@ -78,12 +78,12 @@ echo $a->plus($b); // echoes '777.777'
 ### Subtraction
 Returns the computed result of subtracting another number to the current one.
 ```php
-public DecimalNumber::minus ( DecimalNumber $subtrahend ): DecimalNumber
+public Decimal_Number::minus ( Decimal_Number $subtrahend ): Decimal_Number
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('777.777');
-$b = new PrestaShop\Decimal\DecimalNumber('654.321');
+$a = new Presta_Shop\Decimal\Decimal_Number('777.777');
+$b = new Presta_Shop\Decimal\Decimal_Number('654.321');
 
 echo $a->minus($b); // echoes '123.456'
 ```
@@ -91,12 +91,12 @@ echo $a->minus($b); // echoes '123.456'
 ### Multiplication
 Returns the computed result of multiplying the current number with another one.
 ```php
-public DecimalNumber::times ( DecimalNumber $factor ): DecimalNumber
+public Decimal_Number::times ( Decimal_Number $factor ): Decimal_Number
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('777.777');
-$b = new PrestaShop\Decimal\DecimalNumber('654.321');
+$a = new Presta_Shop\Decimal\Decimal_Number('777.777');
+$b = new Presta_Shop\Decimal\Decimal_Number('654.321');
 
 echo $a->times($b); // echoes '508915.824417'
 ```
@@ -104,125 +104,125 @@ echo $a->times($b); // echoes '508915.824417'
 ### Division
 Returns the computed result of dividing  the current number by another one, with up to a certain number of decimal positions (6 by default).
 ```php
-public DecimalNumber::dividedBy ( DecimalNumber $divisor [, int $precision = Operation\Division::DEFAULT_PRECISION ] )
+public Decimal_Number::dividedBy ( Decimal_Number $divisor [, int $precision = Operation\Division::DEFAULT_PRECISION ] )
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('777.777');
-$b = new PrestaShop\Decimal\DecimalNumber('654.321');
+$a = new Presta_Shop\Decimal\Decimal_Number('777.777');
+$b = new Presta_Shop\Decimal\Decimal_Number('654.321');
 
-echo $a->dividedBy($b, 0);  // echoes '1'
-echo $a->dividedBy($b, 5);  // echoes '1.18867'
-echo $a->dividedBy($b, 10); // echoes '1.1886780341'
-echo $a->dividedBy($b, 15); // echoes '1.188678034175886'
+echo $a->divided_by($b, 0);  // echoes '1'
+echo $a->divided_by($b, 5);  // echoes '1.18867'
+echo $a->divided_by($b, 10); // echoes '1.1886780341'
+echo $a->divided_by($b, 15); // echoes '1.188678034175886'
 ```
 
 ### Comparison
 Returns the result of the comparison assertion.
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('777.777');
-$b = new PrestaShop\Decimal\DecimalNumber('654.321');
+$a = new Presta_Shop\Decimal\Decimal_Number('777.777');
+$b = new Presta_Shop\Decimal\Decimal_Number('654.321');
 
 $a->equals($b);                // returns false
-$a->isLowerThan($b);           // returns false
-$a->isLowerOrEqualThan($b);    // returns false
-$a->isGreaterThan($b);         // returns true
-$a->isGreaterOrEqualThan($b);  // returns true
+$a->is_lower_than($b);           // returns false
+$a->is_lower_or_equal_than($b);    // returns false
+$a->is_greater_than($b);         // returns true
+$a->is_greater_or_equal_than($b);  // returns true
 
 // shortcut methods
-$a->equalsZero();               // returns false
-$a->isLowerThanZero();          // returns false 
-$a->isLowerOrEqualThanZero();   // returns false
-$a->isGreaterThanZero();        // returns true
-$a->isGreaterOrEqualThanZero(); // returns true
+$a->equals_zero();               // returns false
+$a->is_lower_than_zero();          // returns false 
+$a->is_lower_or_equal_than_zero();   // returns false
+$a->is_greater_than_zero();        // returns true
+$a->is_greater_or_equal_than_zero(); // returns true
 ```
 
 ### Fixed precision
 Returns the number as a string, optionally rounded, with an exact number of decimal positions.
 ```php
-public DecimalNumber::toPrecision ( int $precision [, string $roundingMode = Rounding::ROUND_TRUNCATE ] ): string
+public Decimal_Number::toPrecision ( int $precision [, string $roundingMode = Rounding::ROUND_TRUNCATE ] ): string
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('123.456');
-$a = new PrestaShop\Decimal\DecimalNumber('-123.456');
+$a = new Presta_Shop\Decimal\Decimal_Number('123.456');
+$a = new Presta_Shop\Decimal\Decimal_Number('-123.456');
 
 // truncate / pad
-$a->toPrecision(0); // '123'
-$a->toPrecision(1); // '123.4'
-$a->toPrecision(2); // '123.45'
-$a->toPrecision(3); // '123.456'
-$a->toPrecision(4); // '123.4560'
-$b->toPrecision(0); // '-123'
-$b->toPrecision(1); // '-123.4'
-$b->toPrecision(2); // '-123.45'
-$b->toPrecision(3); // '-123.456'
-$b->toPrecision(4); // '-123.4560'
+$a->to_precision(0); // '123'
+$a->to_precision(1); // '123.4'
+$a->to_precision(2); // '123.45'
+$a->to_precision(3); // '123.456'
+$a->to_precision(4); // '123.4560'
+$b->to_precision(0); // '-123'
+$b->to_precision(1); // '-123.4'
+$b->to_precision(2); // '-123.45'
+$b->to_precision(3); // '-123.456'
+$b->to_precision(4); // '-123.4560'
 
 // ceil (round up)
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_CEIL); // '124'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_CEIL); // '123.5'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_CEIL); // '123.46'
-$b->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_CEIL); // '-122'
-$b->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_CEIL); // '-123.3'
-$b->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_CEIL); // '-123.44'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_CEIL); // '124'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_CEIL); // '123.5'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_CEIL); // '123.46'
+$b->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_CEIL); // '-122'
+$b->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_CEIL); // '-123.3'
+$b->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_CEIL); // '-123.44'
 
 // floor (round down)
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_FLOOR); // '123'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_FLOOR); // '123.4'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_FLOOR); // '123.45'
-$b->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_FLOOR); // '-124'
-$b->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_FLOOR); // '-123.5'
-$b->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_FLOOR); // '-123.46'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_FLOOR); // '123'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_FLOOR); // '123.4'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_FLOOR); // '123.45'
+$b->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_FLOOR); // '-124'
+$b->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_FLOOR); // '-123.5'
+$b->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_FLOOR); // '-123.46'
 
 // half-up (symmetric half-up)
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '123'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '123.5'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '123.46'
-$b->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '-123'
-$b->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '-123.5'
-$b->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '-123.46'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '123'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '123.5'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '123.46'
+$b->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '-123'
+$b->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '-123.5'
+$b->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_UP); // '-123.46'
 
 // half-down (symmetric half-down)
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '123'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '123.4'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '123.46'
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '-123'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '-123.4'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '-123.46'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '123'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '123.4'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '123.46'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '-123'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '-123.4'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_DOWN); // '-123.46'
 
 // half-even
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '123'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '123.4'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '123.46'
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '-123'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '-123.4'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '-123.46'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '123'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '123.4'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '123.46'
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '-123'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '-123.4'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '-123.46'
 
-$a = new PrestaShop\Decimal\DecimalNumber('1.1525354556575859505');
-$a->toPrecision(0, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1'
-$a->toPrecision(1, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.2'
-$a->toPrecision(2, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.15'
-$a->toPrecision(3, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.152'
-$a->toPrecision(4, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.1525'
-$a->toPrecision(5, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.15255'
-$a->toPrecision(6, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.152535'
-$a->toPrecision(7, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.1525354'
-$a->toPrecision(8, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.15253546'
-$a->toPrecision(9, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.152535456'
-$a->toPrecision(10, PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '1.1525354556'
+$a = new Presta_Shop\Decimal\Decimal_Number('1.1525354556575859505');
+$a->to_precision(0, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1'
+$a->to_precision(1, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.2'
+$a->to_precision(2, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.15'
+$a->to_precision(3, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.152'
+$a->to_precision(4, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.1525'
+$a->to_precision(5, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.15255'
+$a->to_precision(6, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.152535'
+$a->to_precision(7, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.1525354'
+$a->to_precision(8, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.15253546'
+$a->to_precision(9, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN);  // '1.152535456'
+$a->to_precision(10, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); // '1.1525354556'
 ```
 
 ### Rounding
 Rounding behaves like `toPrecision`, but provides "up to" a certain number of decimal positions
 (it does not add trailing zeroes).
 ```php
-public DecimalNumber::round ( int $maxDecimals [, string $roundingMode = Rounding::ROUND_TRUNCATE ] ): string
+public Decimal_Number::round ( int $maxDecimals [, string $roundingMode = Rounding::ROUND_TRUNCATE ] ): string
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('123.456');
-$a = new PrestaShop\Decimal\DecimalNumber('-123.456');
+$a = new Presta_Shop\Decimal\Decimal_Number('123.456');
+$a = new Presta_Shop\Decimal\Decimal_Number('-123.456');
 
 // truncate / pad
 $a->round(0); // '123'
@@ -240,31 +240,31 @@ $b->round(4); // '-123.456'
 ### Dot shifting
 Creates a new copy of this number multiplied by 10^exponent
 ```php
-public DecimalNumber::toMagnitude ( int $exponent ): DecimalNumber
+public Decimal_Number::toMagnitude ( int $exponent ): Decimal_Number
 ```
 Examples:
 ```php
-$a = new PrestaShop\Decimal\DecimalNumber('123.456789');
+$a = new Presta_Shop\Decimal\Decimal_Number('123.456789');
 
 // shift 3 digits to the left
-$a->toMagnitude(-3); // 0.123456789
+$a->to_magnitude(-3); // 0.123456789
 
 // shift 3 digits to the right
-$a->toMagnitude(3); // 123456.789
+$a->to_magnitude(3); // 123456.789
 ```
 
 ### Useful methods
 ```php
-$number = new PrestaShop\Decimal\DecimalNumber('123.45');
-$number->getIntegerPart();    // '123'
-$number->getFractionalPart(); // '45'
+$number = new Presta_Shop\Decimal\Decimal_Number('123.45');
+$number->get_integer_part();    // '123'
+$number->get_fractional_part(); // '45'
 $number->getPrecision();      // '2' (number of decimals)
-$number->getSign();           // '' ('-' if the number was negative)
-$number->getExponent();       // '2' (always positive)
-$number->getCoefficient();    // '123456'
-$number->isPositive();        // true
-$number->isNegative();        // false
-$number->invert();            // new Decimal\DecimalNumber('-123.45')
+$number->get_sign();           // '' ('-' if the number was negative)
+$number->get_exponent();       // '2' (always positive)
+$number->get_coefficient();    // '123456'
+$number->is_positive();        // true
+$number->is_negative();        // false
+$number->invert();            // new Decimal\Decimal_Number('-123.45')
 ```
 
 ## Testing

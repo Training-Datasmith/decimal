@@ -2,35 +2,35 @@
 
 declare(strict_types=1);
 /**
- * This file is part of the PrestaShop\Decimal package
+ * This file is part of the Presta_Shop\Decimal package
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
-namespace PrestaShop\Decimal\Test\Operation;
+namespace Presta_Shop\Decimal\Test\Operation;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\Decimal\Operation\Rounding;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Decimal\Operation\Rounding;
 
-class RoundingTest extends TestCase
+class Rounding_Test extends TestCase
 {
     /**
      * Given decimal number
      * When rounding it using an undefined rounding mode
      * An InvalidArgumentException should be thrown
      */
-    public function testItThrowsExceptionIfRoundingModeIsInvalid()
+    public function test_it_throws_exception_if_rounding_mode_is_invalid()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $decimalNumber = new DecimalNumber('1.2345');
+        $decimal_number = new Decimal_Number('1.2345');
         $rounding = new Rounding();
 
         $rounding->compute(
-            $decimalNumber,
+            $decimal_number,
             2,
             'foobar'
         );
@@ -43,17 +43,17 @@ class RoundingTest extends TestCase
      *
      * @param mixed $precision
      *
-     * @dataProvider provideInvalidPrecision
+     * @dataProvider provide_invalid_precision
      */
-    public function testItThrowsExceptionIfPrecisionIsInvalid($precision)
+    public function test_it_throws_exception_if_precision_is_invalid($precision)
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $decimalNumber = new DecimalNumber('1.2345');
+        $decimal_number = new Decimal_Number('1.2345');
         $rounding = new Rounding();
 
         $rounding->compute(
-            $decimalNumber,
+            $decimal_number,
             $precision,
             Rounding::ROUND_FLOOR
         );
@@ -68,11 +68,11 @@ class RoundingTest extends TestCase
      * @param int $precision
      * @param string $expected
      *
-     * @dataProvider provideTruncateTestCases
+     * @dataProvider provide_truncate_test_cases
      */
-    public function testItTruncatesNumbers($number, $precision, $expected)
+    public function test_it_truncates_numbers($number, $precision, $expected)
     {
-        $this->roundNumber($number, $precision, Rounding::ROUND_TRUNCATE, $expected);
+        $this->round_number($number, $precision, Rounding::ROUND_TRUNCATE, $expected);
     }
 
     /**
@@ -85,11 +85,11 @@ class RoundingTest extends TestCase
      * @param int $precision
      * @param string $expected
      *
-     * @dataProvider provideCeilTestCases
+     * @dataProvider provide_ceil_test_cases
      */
-    public function testItPerformsCeilRounding($number, $precision, $expected)
+    public function test_it_performs_ceil_rounding($number, $precision, $expected)
     {
-        $this->roundNumber($number, $precision, Rounding::ROUND_CEIL, $expected);
+        $this->round_number($number, $precision, Rounding::ROUND_CEIL, $expected);
     }
 
     /**
@@ -102,11 +102,11 @@ class RoundingTest extends TestCase
      * @param int $precision
      * @param string $expected
      *
-     * @dataProvider provideFloorTestCases
+     * @dataProvider provide_floor_test_cases
      */
-    public function testItPerformsFloorRounding($number, $precision, $expected)
+    public function test_it_performs_floor_rounding($number, $precision, $expected)
     {
-        $this->roundNumber($number, $precision, Rounding::ROUND_FLOOR, $expected);
+        $this->round_number($number, $precision, Rounding::ROUND_FLOOR, $expected);
     }
 
     /**
@@ -122,11 +122,11 @@ class RoundingTest extends TestCase
      * @param int $precision
      * @param string $expected
      *
-     * @dataProvider provideHalfUpTestCases
+     * @dataProvider provide_half_up_test_cases
      */
-    public function testItPerformsHalfUpRounding($number, $precision, $expected)
+    public function test_it_performs_half_up_rounding($number, $precision, $expected)
     {
-        $this->roundNumber($number, $precision, Rounding::ROUND_HALF_UP, $expected);
+        $this->round_number($number, $precision, Rounding::ROUND_HALF_UP, $expected);
     }
 
     /**
@@ -142,11 +142,11 @@ class RoundingTest extends TestCase
      * @param int $precision
      * @param string $expected
      *
-     * @dataProvider provideHalfDownTestCases
+     * @dataProvider provide_half_down_test_cases
      */
-    public function testItPerformsHalfDownRounding($number, $precision, $expected)
+    public function test_it_performs_half_down_rounding($number, $precision, $expected)
     {
-        $this->roundNumber($number, $precision, Rounding::ROUND_HALF_DOWN, $expected);
+        $this->round_number($number, $precision, Rounding::ROUND_HALF_DOWN, $expected);
     }
 
     /**
@@ -166,11 +166,11 @@ class RoundingTest extends TestCase
      * @param int $precision
      * @param string $expected
      *
-     * @dataProvider provideHalfEvenTestCases
+     * @dataProvider provide_half_even_test_cases
      */
-    public function testItPerformsHalfEvenRounding($number, $precision, $expected)
+    public function test_it_performs_half_even_rounding($number, $precision, $expected)
     {
-        $this->roundNumber($number, $precision, Rounding::ROUND_HALF_EVEN, $expected);
+        $this->round_number($number, $precision, Rounding::ROUND_HALF_EVEN, $expected);
     }
 
     /**
@@ -190,13 +190,13 @@ class RoundingTest extends TestCase
      * @param $mode
      * @param $expected
      */
-    public function roundNumber($number, $precision, $mode, $expected)
+    public function round_number($number, $precision, $mode, $expected)
     {
-        $decimalNumber = new DecimalNumber($number);
+        $decimal_number = new Decimal_Number($number);
         $rounding = new Rounding();
 
         $result = $rounding->compute(
-            $decimalNumber,
+            $decimal_number,
             $precision,
             $mode
         );
@@ -204,7 +204,7 @@ class RoundingTest extends TestCase
         $this->assertSame($expected, (string) $result);
     }
 
-    public function provideTruncateTestCases()
+    public function provide_truncate_test_cases()
     {
         return [
             '0 digits' => ['1.23456789', 0,  '1'],
@@ -235,7 +235,7 @@ class RoundingTest extends TestCase
         ];
     }
 
-    public function provideCeilTestCases()
+    public function provide_ceil_test_cases()
     {
         return [
             '0 digits' => ['1.23456789', 0,  '2'],
@@ -266,7 +266,7 @@ class RoundingTest extends TestCase
         ];
     }
 
-    public function provideFloorTestCases()
+    public function provide_floor_test_cases()
     {
         return [
             '0 digits' => ['1.23456789', 0,  '1'],
@@ -297,7 +297,7 @@ class RoundingTest extends TestCase
         ];
     }
 
-    public function provideHalfUpTestCases()
+    public function provide_half_up_test_cases()
     {
         return [
             '0 digits' => ['1.23456789', 0,  '1'],
@@ -328,7 +328,7 @@ class RoundingTest extends TestCase
         ];
     }
 
-    public function provideHalfDownTestCases()
+    public function provide_half_down_test_cases()
     {
         return [
             '0 digits' => ['1.23456789', 0,  '1'],
@@ -359,7 +359,7 @@ class RoundingTest extends TestCase
         ];
     }
 
-    public function provideHalfEvenTestCases()
+    public function provide_half_even_test_cases()
     {
         return [
             'round even' => ['2.5', 0, '2'],
@@ -412,7 +412,7 @@ class RoundingTest extends TestCase
         ];
     }
 
-    public function provideInvalidPrecision()
+    public function provide_invalid_precision()
     {
         return [
             [-1],
