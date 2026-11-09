@@ -203,11 +203,11 @@ class Decimal_NumberTest extends TestCase
      */
     public function test_is_able_to_tell_if_greater_than($number1, $number2, $expected)
     {
-        $shouldBeGreater = (1 === $expected);
+        $should_be_greater = (1 === $expected);
         $number1 = new Decimal_Number($number1);
         $number2 = new Decimal_Number($number2);
 
-        $this->assertSame($number1->is_greater_than($number2), $shouldBeGreater);
+        $this->assertSame($number1->is_greater_than($number2), $should_be_greater);
     }
 
     /**
@@ -223,11 +223,11 @@ class Decimal_NumberTest extends TestCase
      */
     public function test_is_able_to_tell_if_lower_than($number1, $number2, $expected)
     {
-        $shouldBeLower = (-1 === $expected);
+        $should_be_lower = (-1 === $expected);
         $number1 = new Decimal_Number($number1);
         $number2 = new Decimal_Number($number2);
 
-        $this->assertSame($number1->is_lower_than($number2), $shouldBeLower);
+        $this->assertSame($number1->is_lower_than($number2), $should_be_lower);
     }
 
     /**
@@ -271,10 +271,10 @@ class Decimal_NumberTest extends TestCase
         return [
             [
                 'number' => '0.0',
-                'expectedSign' => '',
-                'expectedInteger' => '0',
-                'expectedFraction' => '0',
-                'expectedStr' => '0',
+                'expected_sign' => '',
+                'expected_integer' => '0',
+                'expected_fraction' => '0',
+                'expected_str' => '0',
             ],
             ['00000.0', '', '0', '0', '0'],
             ['0.00000', '', '0', '0', '0'],

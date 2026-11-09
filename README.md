@@ -104,7 +104,7 @@ echo $a->times($b); // echoes '508915.824417'
 ### Division
 Returns the computed result of dividing  the current number by another one, with up to a certain number of decimal positions (6 by default).
 ```php
-public Decimal_Number::dividedBy ( Decimal_Number $divisor [, int $precision = Operation\Division::DEFAULT_PRECISION ] )
+public Decimal_Number::divided_by ( Decimal_Number $divisor [, int $precision = Operation\Division::DEFAULT_PRECISION ] )
 ```
 Examples:
 ```php
@@ -140,7 +140,7 @@ $a->is_greater_or_equal_than_zero(); // returns true
 ### Fixed precision
 Returns the number as a string, optionally rounded, with an exact number of decimal positions.
 ```php
-public Decimal_Number::toPrecision ( int $precision [, string $roundingMode = Rounding::ROUND_TRUNCATE ] ): string
+public Decimal_Number::to_precision ( int $precision [, string $rounding_mode = Rounding::ROUND_TRUNCATE ] ): string
 ```
 Examples:
 ```php
@@ -214,10 +214,10 @@ $a->to_precision(10, Presta_Shop\Decimal\Operation\Rounding::ROUND_HALF_EVEN); /
 ```
 
 ### Rounding
-Rounding behaves like `toPrecision`, but provides "up to" a certain number of decimal positions
+Rounding behaves like `to_precision`, but provides "up to" a certain number of decimal positions
 (it does not add trailing zeroes).
 ```php
-public Decimal_Number::round ( int $maxDecimals [, string $roundingMode = Rounding::ROUND_TRUNCATE ] ): string
+public Decimal_Number::round ( int $max_decimals [, string $rounding_mode = Rounding::ROUND_TRUNCATE ] ): string
 ```
 Examples:
 ```php
@@ -240,7 +240,7 @@ $b->round(4); // '-123.456'
 ### Dot shifting
 Creates a new copy of this number multiplied by 10^exponent
 ```php
-public Decimal_Number::toMagnitude ( int $exponent ): Decimal_Number
+public Decimal_Number::to_magnitude ( int $exponent ): Decimal_Number
 ```
 Examples:
 ```php
@@ -258,7 +258,7 @@ $a->to_magnitude(3); // 123456.789
 $number = new Presta_Shop\Decimal\Decimal_Number('123.45');
 $number->get_integer_part();    // '123'
 $number->get_fractional_part(); // '45'
-$number->getPrecision();      // '2' (number of decimals)
+$number->get_precision();      // 2 (number of decimals)
 $number->get_sign();           // '' ('-' if the number was negative)
 $number->get_exponent();       // '2' (always positive)
 $number->get_coefficient();    // '123456'

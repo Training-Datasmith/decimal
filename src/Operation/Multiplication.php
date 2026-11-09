@@ -87,8 +87,8 @@ class Multiplication
      *
      * This method implements a naive "long multiplication" algorithm.
      *
-     * @param string $topNumber
-     * @param string $bottomNumber
+     * @param string $top_number
+     * @param string $bottom_number
      *
      * @return string
      */

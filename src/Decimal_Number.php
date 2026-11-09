@@ -216,7 +216,7 @@ class Decimal_Number
     }
 
     /**
-     * Returns the number as a string, with up to $maxDecimals significant digits.
+     * Returns the number as a string, with up to $max_decimals significant digits.
      *
      * Example:
      * ```
@@ -228,8 +228,8 @@ class Decimal_Number
      * (string) $n->round(5); // '123.456' (does not add trailing zeroes)
      * ```
      *
-     * @param int $maxDecimals Maximum number of decimals
-     * @param string $roundingMode [default=Rounding::ROUND_TRUNCATE] Rounding algorithm
+     * @param int $max_decimals Maximum number of decimals
+     * @param string $rounding_mode [default=Rounding::ROUND_TRUNCATE] Rounding algorithm
      */
     public function round($max_decimals, $rounding_mode = Rounding::ROUND_TRUNCATE): string
     {

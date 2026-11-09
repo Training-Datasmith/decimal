@@ -69,7 +69,7 @@ class Builder
 
     /**
      * @param string $number
-     * @param array $numberParts
+     * @param array $number_parts
      */
     private static function it_looks_like_a_number($number, &$number_parts): bool
     {

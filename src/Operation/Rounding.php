@@ -29,7 +29,7 @@ class Rounding
      *
      * @param Decimal_Number $number Number to round
      * @param int $precision Maximum number of decimals
-     * @param string $roundingMode Rounding algorithm
+     * @param string $rounding_mode Rounding algorithm
      *
      * @return Decimal_Number
      */
@@ -192,14 +192,14 @@ class Rounding
      *
      * ```
      * $n = new Decimal\Number('123.456');
-     * $this->roundHalfUp($n, 0); // '123'
-     * $this->roundHalfUp($n, 1); // '123.5'
-     * $this->roundHalfUp($n, 2); // '123.46'
+     * $this->round_half_up($n, 0); // '123'
+     * $this->round_half_up($n, 1); // '123.5'
+     * $this->round_half_up($n, 2); // '123.46'
      *
      * $n = new Decimal\Number('-123.456');
-     * $this->roundHalfUp($n, 0); // '-123'
-     * $this->roundHalfUp($n, 1); // '-123.5'
-     * $this->roundHalfUp($n, 2); // '-123.46'
+     * $this->round_half_up($n, 0); // '-123'
+     * $this->round_half_up($n, 1); // '-123.5'
+     * $this->round_half_up($n, 2); // '-123.46'
      * ```
      *
      * @param Decimal_Number $number Number to round
@@ -221,14 +221,14 @@ class Rounding
      *
      * ```
      * $n = new Decimal\Number('123.456');
-     * $this->roundHalfUp($n, 0); // '123'
-     * $this->roundHalfUp($n, 1); // '123.4'
-     * $this->roundHalfUp($n, 2); // '123.46'
+     * $this->round_half_up($n, 0); // '123'
+     * $this->round_half_up($n, 1); // '123.4'
+     * $this->round_half_up($n, 2); // '123.46'
      *
      * $n = new Decimal\Number('-123.456');
-     * $this->roundHalfUp($n, 0); // '-123'
-     * $this->roundHalfUp($n, 1); // '-123.4'
-     * $this->roundHalfUp($n, 2); // '-123.46'
+     * $this->round_half_up($n, 0); // '-123'
+     * $this->round_half_up($n, 1); // '-123.4'
+     * $this->round_half_up($n, 2); // '-123.46'
      * ```
      *
      * @param Decimal_Number $number Number to round
@@ -255,27 +255,27 @@ class Rounding
      *
      * ```
      * $n = new Decimal\Number('123.456');
-     * $this->roundHalfUp($n, 0); // '123'
-     * $this->roundHalfUp($n, 1); // '123.4'
-     * $this->roundHalfUp($n, 2); // '123.46'
+     * $this->round_half_up($n, 0); // '123'
+     * $this->round_half_up($n, 1); // '123.4'
+     * $this->round_half_up($n, 2); // '123.46'
      *
      * $n = new Decimal\Number('-123.456');
-     * $this->roundHalfUp($n, 0); // '-123'
-     * $this->roundHalfUp($n, 1); // '-123.4'
-     * $this->roundHalfUp($n, 2); // '-123.46'
+     * $this->round_half_up($n, 0); // '-123'
+     * $this->round_half_up($n, 1); // '-123.4'
+     * $this->round_half_up($n, 2); // '-123.46'
      *
      * $n = new Decimal\Number('1.1525354556575859505');
-     * $this->roundHalfEven($n, 0);  // '1'
-     * $this->roundHalfEven($n, 1);  // '1.2'
-     * $this->roundHalfEven($n, 2);  // '1.15'
-     * $this->roundHalfEven($n, 3);  // '1.152'
-     * $this->roundHalfEven($n, 4);  // '1.1525'
-     * $this->roundHalfEven($n, 5);  // '1.15255'
-     * $this->roundHalfEven($n, 6);  // '1.152535'
-     * $this->roundHalfEven($n, 7);  // '1.1525354'
-     * $this->roundHalfEven($n, 8);  // '1.15253546'
-     * $this->roundHalfEven($n, 9);  // '1.152535456'
-     * $this->roundHalfEven($n, 10); // '1.1525354556'
+     * $this->round_half_even($n, 0);  // '1'
+     * $this->round_half_even($n, 1);  // '1.2'
+     * $this->round_half_even($n, 2);  // '1.15'
+     * $this->round_half_even($n, 3);  // '1.152'
+     * $this->round_half_even($n, 4);  // '1.1525'
+     * $this->round_half_even($n, 5);  // '1.15255'
+     * $this->round_half_even($n, 6);  // '1.152535'
+     * $this->round_half_even($n, 7);  // '1.1525354'
+     * $this->round_half_even($n, 8);  // '1.15253546'
+     * $this->round_half_even($n, 9);  // '1.152535456'
+     * $this->round_half_even($n, 10); // '1.1525354556'
      * ```
      *
      * @param Decimal_Number $number Number to round
@@ -290,17 +290,17 @@ class Rounding
             return $number;
         }
         /**
-         * The principle for roundHalfEven is the following:
+         * The principle for round_half_even is the following:
          *
          * let X = number to round
          *     P = number of decimal digits that we want
          *     D = digit from the fractional part at index P
          *     E = digit to the left of D
          *
-         * if D != 5, roundHalfEven(X, P) = roundHalfUp(X, P)
-         * if D = 5 and E is even, roundHalfEven(X, P) = truncate(X, P)
-         * if D = 5 and E is odd and X is positive, roundHalfUp(X, P) = ceil(X, P)
-         * if D = 5 and E is odd and X is negative, roundHalfUp(X, P) = floor(X, P)
+         * if D != 5, round_half_even(X, P) = round_half_up(X, P)
+         * if D = 5 and E is even, round_half_even(X, P) = truncate(X, P)
+         * if D = 5 and E is odd and X is positive, round_half_up(X, P) = ceil(X, P)
+         * if D = 5 and E is odd and X is negative, round_half_up(X, P) = floor(X, P)
          */
         $fractional_part = $number->get_fractional_part();
         $digit = (int) $fractional_part[$precision];
@@ -326,13 +326,13 @@ class Rounding
 
     /**
      * Rounds the number according to the digit D located at precision P.
-     * - It rounds away from zero if D >= $halfwayValue
-     * - It rounds towards zero if D < $halfWayValue
+     * - It rounds away from zero if D >= $halfway_value
+     * - It rounds towards zero if D < $half_way_value
      *
      * @param Decimal_Number $number Number to round
      * @param int $precision Maximum number of decimals
-     * @param int $halfwayValue threshold upon which the rounding will be performed
-     *                          away from zero instead of towards zero
+     * @param int $halfway_value threshold upon which the rounding will be performed
+     *                           away from zero instead of towards zero
      *
      * @return Decimal_Number
      */
@@ -343,15 +343,15 @@ class Rounding
             return $number;
         }
         /**
-         * The principle for roundHalf is the following:
+         * The principle for round_half is the following:
          *
          * let X = number to round
          *     P = number of decimal digits that we want
          *     D = digit from the fractional part at index P
          *     Y = digit considered as the half-way value on which we round up (usually 5 or 6)
          *
-         * if D >= Y, roundHalf(X, P) = ceil(X, P)
-         * if D < Y, roundHalf(X, P) = truncate(X, P)
+         * if D >= Y, round_half(X, P) = ceil(X, P)
+         * if D < Y, round_half(X, P) = truncate(X, P)
          */
         $fractional_part = $number->get_fractional_part();
         $digit = (int) $fractional_part[$precision];

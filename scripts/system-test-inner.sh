@@ -80,7 +80,7 @@ rm -f "${validate_out}"
 
 audit_out="$(mktemp)"
 set +e
-php /app/.system-test/composer.phar audit --abandoned=ignore > "${audit_out}" 2>&1
+php /app/.system-test/composer.phar audit --abandoned=report > "${audit_out}" 2>&1
 audit_status=$?
 set -e
 cat "${audit_out}"
@@ -93,22 +93,24 @@ rm -f "${audit_out}"
 
 php scripts/check-cluster-pins.php > /tmp/check-cluster-pins.out
 cat /tmp/check-cluster-pins.out
-require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: wrong-SHA demo rejected installed\.php reference$' >/dev/null
-require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: wrong-SHA demo rejected installed\.json source\.reference$' >/dev/null
-require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: org aliases 0; Packagist phpunit and phpstan are not index tips$' >/dev/null
+require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: wrong-SHA demo rejected installed\.php reference$'
+require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: wrong-SHA demo rejected installed\.json source\.reference$'
+require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: vendor/composer/installed\.php sha256 unchanged \([a-f0-9]{64}\)$'
+require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: vendor/composer/installed\.json sha256 unchanged \([a-f0-9]{64}\)$'
+require_line "cluster pins" /tmp/check-cluster-pins.out '^check-cluster-pins: org aliases 0; Packagist phpunit and phpstan are not index tips$'
 
 php scripts/check-rename.php > /tmp/check-rename.out
 cat /tmp/check-rename.out
-require_line "rename check" /tmp/check-rename.out '^rename-check: no old repo-owned names remain$' >/dev/null
+require_line "rename check" /tmp/check-rename.out '^rename-check: no old repo-owned names remain$'
 
 php scripts/lint-src.php > /tmp/lint-src.out
 cat /tmp/lint-src.out
+lint_line_file="$(mktemp)"
 while IFS= read -r line; do
-    if ! [[ "${line}" =~ ^No\ syntax\ errors\ detected\ in\ .+$ ]]; then
-        echo "lint-src: unexpected line: ${line}" >&2
-        exit 1
-    fi
+    printf '%s\n' "${line}" > "${lint_line_file}"
+    require_line "lint-src" "${lint_line_file}" '^No syntax errors detected in .+$'
 done < /tmp/lint-src.out
+rm -f "${lint_line_file}"
 
 if ! bash scripts/measure-upstream-baseline.sh > /tmp/measure-baseline.out 2>&1; then
     cat /tmp/measure-baseline.out
@@ -116,6 +118,7 @@ if ! bash scripts/measure-upstream-baseline.sh > /tmp/measure-baseline.out 2>&1;
     exit 1
 fi
 cat /tmp/measure-baseline.out
+require_line "upstream baseline" /tmp/measure-baseline.out '^upstream baseline recorded: OK \(619 tests, 970 assertions\)$'
 
 mkdir -p /app/.system-test
 php -r '
@@ -139,27 +142,27 @@ fail_deprecation_output "phpunit" "${phpunit_out}"
 if [[ ${phpunit_status} -ne 0 ]]; then
     exit "${phpunit_status}"
 fi
-ok_line="$(require_line "phpunit" "${phpunit_out}" '^OK \([0-9]+ tests?, [0-9]+ assertions\)$')"
+ok_line="$(require_line "phpunit" "${phpunit_out}" '^OK \(619 tests, 970 assertions\)$')"
 baseline_line="$(cat scripts/upstream-baseline.txt)"
-echo "phpunit finished: ${ok_line}"
-echo "phpunit upstream baseline: ${baseline_line}"
+baseline_file="$(mktemp)"
+printf '%s\n' "${baseline_line}" > "${baseline_file}"
+require_line "phpunit baseline file" "${baseline_file}" '^OK \(619 tests, 970 assertions\)$'
+rm -f "${baseline_file}"
 
+baseline_check_out="$(mktemp)"
 php -r '
 $finished = $argv[1];
 $baseline = $argv[2];
-$pat = "/^OK \\((\\d+) tests?, (\\d+) assertions\\)$/"; 
-if (!preg_match($pat, $finished, $fm) || !preg_match($pat, $baseline, $bm)) {
-    fwrite(STDERR, "baseline compare: malformed OK lines\n");
+$pat = "/^OK \\(619 tests, 970 assertions\\)$/"; 
+if (!preg_match($pat, $finished) || !preg_match($pat, $baseline)) {
+    fwrite(STDERR, "baseline compare: expected OK (619 tests, 970 assertions)\n");
     exit(1);
 }
-$ft = (int) $fm[1]; $fa = (int) $fm[2];
-$bt = (int) $bm[1]; $ba = (int) $bm[2];
-if ($ft < $bt || $fa < $ba) {
-    fwrite(STDERR, "baseline regression: finished {$ft}/{$fa} < upstream {$bt}/{$ba}\n");
-    exit(1);
-}
-echo "baseline-check: upstream {$bt}/{$ba}, finished {$ft}/{$fa}\n";
-' "${ok_line}" "${baseline_line}"
+echo "baseline-check: upstream 619/970, finished 619/970\n";
+' "${ok_line}" "${baseline_line}" > "${baseline_check_out}"
+cat "${baseline_check_out}"
+require_line "baseline check" "${baseline_check_out}" '^baseline-check: upstream 619/970, finished 619/970$'
+rm -f "${baseline_check_out}"
 
 phpstan_out="$(mktemp)"
 phpstan_err="$(mktemp)"
@@ -181,7 +184,7 @@ rm -f "${phpstan_out}" "${phpstan_err}"
 phpcsfixer_out="$(mktemp)"
 phpcsfixer_err="$(mktemp)"
 set +e
-vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff --ansi --quiet > "${phpcsfixer_out}" 2> "${phpcsfixer_err}"
+vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff --ansi > "${phpcsfixer_out}" 2> "${phpcsfixer_err}"
 phpcsfixer_status=$?
 set -e
 if [[ -s "${phpcsfixer_err}" ]]; then
@@ -195,12 +198,16 @@ if [[ ${phpcsfixer_status} -ne 0 ]]; then
     rm -f "${stripped}" "${phpcsfixer_out}" "${phpcsfixer_err}"
     exit "${phpcsfixer_status}"
 fi
-if grep -q 'begin diff' "${stripped}"; then
+if grep -E '^[[:space:]]+[0-9]+\) ' "${stripped}" >/dev/null; then
     cat "${stripped}" >&2
     rm -f "${stripped}" "${phpcsfixer_out}" "${phpcsfixer_err}"
     exit 1
 fi
-echo 'php-cs-fixer: no changes needed'
+cat "${stripped}"
+require_line "php-cs-fixer" "${stripped}" '^Checked all files in [0-9.]+ seconds, [0-9.]+ MB memory used$'
 rm -f "${stripped}" "${phpcsfixer_out}" "${phpcsfixer_err}"
 
-echo 'system-test: all steps passed.'
+final_out="$(mktemp)"
+echo 'system-test: all steps passed.' > "${final_out}"
+require_line "system-test" "${final_out}" '^system-test: all steps passed\.$'
+rm -f "${final_out}"
